@@ -2,7 +2,7 @@ package gestionSuivi.placement;
 
 import gestionSuivi.placement.GestionTypes;
 
-public enum ListePlacements {
+public enum Placement {
 	
 	FidelityEuro("Fidelity Europe","FidelityEuro",GestionTypes.OPCVM, "FRxx", "FE"),
 	CarmignacEm("Carmignac Emergent","CarmignacEm",GestionTypes.OPCVM, "FRyy", "CE"),
@@ -14,7 +14,7 @@ public enum ListePlacements {
 	private String ISIN;
 	private String codeMaJ;
 
-	ListePlacements(String name, String mnemo, GestionTypes type, String ISIN, String codeMaJ){
+	Placement(String name, String mnemo, GestionTypes type, String ISIN, String codeMaJ){
 		this.name = name;
 		this.mnemo = mnemo;
 		this.type = type;
@@ -23,12 +23,21 @@ public enum ListePlacements {
 	}
 	
 	// collection de "getters"
+	public static String[] getNames(){
+		String[] output = new String[Placement.values().length];
+		int index = 0;
+		for (Placement place:Placement.values()){
+			output[index++]=place.getName();
+		}
+		return output;
+	}
+	
 	public String getName(){
 		return this.name;
 	}
 	
 	public String getMnemo(){
-		return this.name;
+		return this.mnemo;
 	}
 	
 	public GestionTypes getType(){

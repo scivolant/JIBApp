@@ -2,13 +2,15 @@ package gestionSuivi.fenetre;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import gestionSuivi.fenetre.tableauTransaction.TableauTransaction;
 
 public class FenetrePlacement extends JPanel {
 	private JPanel historique;
 	private JPanel haut;
+	private TableauTransaction tabTrans;
 
 	public FenetrePlacement(String nom){
 		super();
@@ -22,8 +24,11 @@ public class FenetrePlacement extends JPanel {
 			panInfo.add(tab_lab[i]);
 		}
 		
+		tabTrans = new TableauTransaction();
+		
 		this.setLayout(new BorderLayout());
 		this.add(label0, BorderLayout.NORTH);
 		this.add(panInfo, BorderLayout.CENTER);
+		this.add(tabTrans, BorderLayout.SOUTH);
 	}
 }

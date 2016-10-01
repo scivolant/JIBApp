@@ -1,5 +1,10 @@
 package gestionSuivi;
 
+import gestionSuivi.fenetre.FenetreAccueil;
+import gestionSuivi.fenetre.FenetrePlacement;
+import gestionSuivi.placement.Placement;
+import gestionSuivi.compte.Compte;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -8,10 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import gestionSuivi.fenetre.FenetreAccueil;
-import gestionSuivi.fenetre.FenetrePlacement;
-
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.BoxLayout;
@@ -24,10 +25,9 @@ public class GestionSuivi {
 	private JPanel content;
 	private JPanel fenetreAccueil;
 	
-	private String[] listContent = {"Accueil", "Invest-1", "Invest-2"};
-	private JPanel[] tab_fenPlacement = new JPanel[listContent.length];
-	
-	private String[] listCompte = {"Compte 1", "Compte 2", "Compte 3"};
+	private String[] listContent;
+	private JPanel[] tab_fenPlacement;
+	private Compte[] listCompte = Compte.values();
 	
 	private int indice = 0;
 	private Color secondColor = Color.lightGray;
@@ -45,6 +45,16 @@ public class GestionSuivi {
 		
 		// Création des différentes fenêtres et ajout dans "content"
 		JPanel fenetreAccueil = new FenetreAccueil();
+		
+		listContent=new String[(Placement.values().length+1)];
+			listContent[0]="Accueil";
+			int index =0;
+			for (String name:Placement.getNames()){
+				listContent[++index]=name;
+			}
+		
+		tab_fenPlacement = new JPanel[listContent.length];
+		
 		content.add(fenetreAccueil, listContent[0]);
 		for (int i=1; i< listContent.length; i++){
 			tab_fenPlacement[i]= new FenetrePlacement(listContent[i]);
@@ -78,7 +88,7 @@ public class GestionSuivi {
 		JCheckBox[] tab_check = new JCheckBox[listCompte.length];
 		panCompte.add(new JLabel("Choix de comptes"));
 		for (int i = 0; i<listCompte.length; i++){
-			tab_check[i]=new JCheckBox(listCompte[i]);
+			tab_check[i]=new JCheckBox(listCompte[i].toString());
 			tab_check[i].setBackground(secondColor);
 			panCompte.add(tab_check[i]);
 		}
