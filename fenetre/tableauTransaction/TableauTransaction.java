@@ -47,35 +47,8 @@ public class TableauTransaction extends JPanel{
 		
 		DataInterf dataInterf = new DataIni();
 		
-		// Chercher s'il y a une sauvegarde pour le placement concerné :
-	    ObjectInputStream ois;
-	    Object[][] data;
-	    try {	
-	      //On récupère maintenant les données !
-	      ois = new ObjectInputStream(
-	              new BufferedInputStream(
-	                new FileInputStream(
-	                  new File(dataInterf.nameSvg(place)))));
-	            
-	      try {
-	        data = (Object[][])ois.readObject();
-		    System.err.println("Fichier retrouvé et lu... "+place.getName());
-	      } catch (ClassNotFoundException e) {
-		    System.err.println("Problème : ClassNotFoundException");
-	        e.printStackTrace();
-	    	data = dataInterf.defaultData();
-	      }
-		  
-	    ois.close();
-	        	
-	    } catch (FileNotFoundException e) {
-    	  System.err.println("Pas de sauvegarde trouvée, on prend les valeurs par défaut à la place !");
-    	  data = dataInterf.defaultData();
-	    } catch (IOException e) {
-	      System.err.println("Autre problème IO...");
-	      e.printStackTrace();
-    	  data = dataInterf.defaultData();
-	    }
+		// Chercher la sauvegarde pour le placement concerné :
+		Object[][] data = dataInterf.lireData(place);
 		
 	    //Les titres des colonnes
 	    String  title[] = {"Date", "Compte", "Prix unit.", "Add (UC)", "Dim (UC)", "Add (€)", "Dim (€)", "Suppr."};
@@ -108,30 +81,7 @@ public class TableauTransaction extends JPanel{
 			
 			public void actionPerformed(ActionEvent event){
 				DataInterf dataInterf = new DataIni();
-			    ObjectOutputStream oos;
-			    try {	
-			      //On envoie maintenant les données !
-			      oos = new ObjectOutputStream(
-			              new BufferedOutputStream(
-			                new FileOutputStream(
-			                  new File(dataInterf.nameSvg(place)))));
-			            
-			      try {
-			        oos.writeObject(this.model.getData());
-			        System.out.println("Svg effectuée ! "+place.getName());
-			        System.out.println("nbr lignes : "+model.getData().length);
-			        System.out.println(this.model.getData());
-			      } catch (IOException e) {
-			        e.printStackTrace();
-			      }
-				
-			      oos.close();
-			        	
-			    } catch (FileNotFoundException e) {
-			      e.printStackTrace();
-			    } catch (IOException e) {
-			      e.printStackTrace();
-			    }
+				dataInterf.svgData(place, model);
 			}
 		}
 	    

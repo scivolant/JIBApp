@@ -1,6 +1,17 @@
 package gestionSuivi.data;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import gestionSuivi.compte.Compte;
+import gestionSuivi.fenetre.tableauTransaction.ZModel;
 import gestionSuivi.placement.Placement;
 
 public class DataIni implements DataInterf {
@@ -28,4 +39,62 @@ public class DataIni implements DataInterf {
 		return ligneDefault;
 	}
 
+	public void svgData(Placement place, ZModel model){
+	    ObjectOutputStream oos;
+	    try {	
+	      //On envoie maintenant les données !
+	      oos = new ObjectOutputStream(
+	              new BufferedOutputStream(
+	                new FileOutputStream(
+	                  new File(this.nameSvg(place)))));
+	            
+	      try {
+	        oos.writeObject(model.getData());
+	        System.out.println("Svg effectuée ! "+place.getName());
+	        System.out.println("nbr lignes : "+model.getData().length);
+	        System.out.println(model.getData());
+	      } catch (IOException e) {
+	        e.printStackTrace();
+	      }
+		
+	      oos.close();
+	        	
+	    } catch (FileNotFoundException e) {
+	      e.printStackTrace();
+	    } catch (IOException e) {
+	      e.printStackTrace();
+	    }
+	}
+	
+	public Object[][] lireData(Placement place){
+	    ObjectInputStream ois;
+	    Object[][] data;
+	    try {	
+	      //On récupère maintenant les données !
+	      ois = new ObjectInputStream(
+	              new BufferedInputStream(
+	                new FileInputStream(
+	                  new File(this.nameSvg(place)))));
+	            
+	      try {
+	        data = (Object[][])ois.readObject();
+		    System.err.println("Fichier retrouvé et lu... "+place.getName());
+	      } catch (ClassNotFoundException e) {
+		    System.err.println("Problème : ClassNotFoundException");
+	        e.printStackTrace();
+	    	data = this.defaultData();
+	      }
+		  
+	    ois.close();
+	        	
+	    } catch (FileNotFoundException e) {
+    	  System.err.println("Pas de sauvegarde trouvée, on prend les valeurs par défaut à la place !");
+    	  data = this.defaultData();
+	    } catch (IOException e) {
+	      System.err.println("Autre problème IO...");
+	      e.printStackTrace();
+    	  data = this.defaultData();
+	    }
+	  return data;
+	}
 }
