@@ -1,12 +1,20 @@
 package gestionSuivi.fenetre.tableauTransaction;
 
-import gestionSuivi.compte.Compte;
-import gestionSuivi.fenetre.tableauTransaction.ZModel;
-import gestionSuivi.fenetre.tableauTransaction.ButtonEditor;
-
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -16,26 +24,58 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import gestionSuivi.compte.Compte;
+import gestionSuivi.data.DataIni;
+import gestionSuivi.data.DataInterf;
+import gestionSuivi.placement.Placement;
+
+/* 
+ * Comporte également les fonctions de sauvegarde du tableau (dans un fichier donné par dataInterf.nameSvg(place) )
+ * 
+ */
+
 public class TableauTransaction extends JPanel{
+	private Placement place;
 	private JTable tableau;
 	private Compte[] listeCompte = Compte.values();
 	private JButton nouvelleLigne = new JButton("Ajouter une ligne");
 	private JButton sauvegarde = new JButton("Sauvegarde");
-	private Object[] ligneDefault= {"16/08/1983", listeCompte[0], new Float(15.0d), new Float(1), new Float(0), new Float(15d), new Float(0), "-"};
 	
-	public TableauTransaction(){
+	public TableauTransaction(Placement place){
 		super(new BorderLayout());
+		this.place = place;
 		
+		DataInterf dataInterf = new DataIni();
 		
-		//String[] comboData=gestionSuivi.placement.Placement.getNames();
-		
-		// Des données pour le tableau (afin de fixer les idées)
-		Object[][] data = {
-	      {"16/08/1983", listeCompte[0], new Float(15.0d), new Float(1), new Float(0), new Float(15d), new Float(0), "-"},
-	      {"01/01/2001", listeCompte[0], new Float(15.0d), new Float(0), new Float(2), new Float(0), new Float(30),"-"},
-	      {"02/02/2002", listeCompte[0], new Float(15.0d), new Float(3), new Float(0), new Float(45d), new Float(0),"-"},
-	      {"13/12/2013", listeCompte[0], new Float(15.0d), new Float(0), new Float(4), new Float(0d), new Float(60d),"-"}		
-		};
+		// Chercher s'il y a une sauvegarde pour le placement concerné :
+	    ObjectInputStream ois;
+	    Object[][] data;
+	    try {	
+	      //On récupère maintenant les données !
+	      ois = new ObjectInputStream(
+	              new BufferedInputStream(
+	                new FileInputStream(
+	                  new File(dataInterf.nameSvg(place)))));
+	            
+	      try {
+	        data = (Object[][])ois.readObject();
+		    System.err.println("Fichier retrouvé et lu... "+place.getName());
+	      } catch (ClassNotFoundException e) {
+		    System.err.println("Problème : ClassNotFoundException");
+	        e.printStackTrace();
+	    	data = dataInterf.defaultData();
+	      }
+		  
+	    ois.close();
+	        	
+	    } catch (FileNotFoundException e) {
+    	  System.err.println("Pas de sauvegarde trouvée, on prend les valeurs par défaut à la place !");
+    	  data = dataInterf.defaultData();
+	    } catch (IOException e) {
+	      System.err.println("Autre problème IO...");
+	      e.printStackTrace();
+    	  data = dataInterf.defaultData();
+	    }
 		
 	    //Les titres des colonnes
 	    String  title[] = {"Date", "Compte", "Prix unit.", "Add (UC)", "Dim (UC)", "Add (€)", "Dim (€)", "Suppr."};
@@ -53,20 +93,56 @@ public class TableauTransaction extends JPanel{
 	    
 		class AddListener implements ActionListener{
 			public void actionPerformed(ActionEvent event){		
-				((ZModel)tableau.getModel()).addRow(ligneDefault);
+				((ZModel)tableau.getModel()).addRow(dataInterf.defaultLine());
 			}
 		}
 		
 		class SvgListener implements ActionListener{
-			public void actionPerformed(ActionEvent event){		
-				((ZModel)tableau.getModel()).addRow(ligneDefault);
+			Object[][] data;
+			
+			public SvgListener(Object[][] data){
+				super();
+				this.data=data;
+			}
+			
+			public void actionPerformed(ActionEvent event){
+				DataInterf dataInterf = new DataIni();
+			    ObjectOutputStream oos;
+			    try {	
+			      //On envoie maintenant les données !
+			      oos = new ObjectOutputStream(
+			              new BufferedOutputStream(
+			                new FileOutputStream(
+			                  new File(dataInterf.nameSvg(place)))));
+			            
+			      try {
+			        oos.writeObject(data);
+			        System.out.println("Svg effectuée ! "+place.getName());
+			      } catch (IOException e) {
+			        e.printStackTrace();
+			      }
+				
+			      oos.close();
+			        	
+			    } catch (FileNotFoundException e) {
+			      e.printStackTrace();
+			    } catch (IOException e) {
+			      e.printStackTrace();
+			    }
 			}
 		}
 	    
 	    nouvelleLigne.addActionListener(new AddListener());
+	    sauvegarde.addActionListener(new SvgListener(data));
+	    
+	    GridLayout gl = new GridLayout(1,2);
+	    gl.setHgap(5);
+	    JPanel pan = new JPanel(gl);
+	    pan.add(nouvelleLigne);
+	    pan.add(sauvegarde);
 	    
 	    this.add(new JScrollPane(tableau), BorderLayout.CENTER);
-	    this.add(nouvelleLigne, BorderLayout.SOUTH);
+	    this.add(pan, BorderLayout.SOUTH);
 	    
 
 	}

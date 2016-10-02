@@ -6,15 +6,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import gestionSuivi.fenetre.tableauTransaction.TableauTransaction;
+import gestionSuivi.placement.Placement;
 
 public class FenetrePlacement extends JPanel {
 	private JPanel historique;
 	private JPanel haut;
 	private TableauTransaction tabTrans;
 
-	public FenetrePlacement(String nom){
+	public FenetrePlacement(Placement place){
 		super();
-		JLabel label0 = new JLabel(nom);
+		JLabel label0 = new JLabel(place.getName());
 
 		JPanel panInfo = new JPanel();
 		String[] tab_info = {"NB total d'UC","prix moyen d'achat", "prix d'équilibre"};
@@ -24,7 +25,7 @@ public class FenetrePlacement extends JPanel {
 			panInfo.add(tab_lab[i]);
 		}
 		
-		tabTrans = new TableauTransaction();
+		tabTrans = new TableauTransaction(place);
 		
 		this.setLayout(new BorderLayout());
 		this.add(label0, BorderLayout.NORTH);

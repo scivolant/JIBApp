@@ -57,7 +57,7 @@ public class GestionSuivi {
 		
 		content.add(fenetreAccueil, listContent[0]);
 		for (int i=1; i< listContent.length; i++){
-			tab_fenPlacement[i]= new FenetrePlacement(listContent[i]);
+			tab_fenPlacement[i]= new FenetrePlacement(Placement.values()[i-1]);
 			content.add(tab_fenPlacement[i], listContent[i]);
 		}
 		
