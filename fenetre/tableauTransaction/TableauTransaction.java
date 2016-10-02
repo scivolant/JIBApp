@@ -1,7 +1,6 @@
 package gestionSuivi.fenetre.tableauTransaction;
 
 import gestionSuivi.compte.Compte;
-import gestionSuivi.placement.Placement;
 import gestionSuivi.fenetre.tableauTransaction.ZModel;
 import gestionSuivi.fenetre.tableauTransaction.ButtonEditor;
 
@@ -21,10 +20,11 @@ public class TableauTransaction extends JPanel{
 	private JTable tableau;
 	private Compte[] listeCompte = Compte.values();
 	private JButton nouvelleLigne = new JButton("Ajouter une ligne");
+	private JButton sauvegarde = new JButton("Sauvegarde");
 	private Object[] ligneDefault= {"16/08/1983", listeCompte[0], new Float(15.0d), new Float(1), new Float(0), new Float(15d), new Float(0), "-"};
 	
 	public TableauTransaction(){
-		super();
+		super(new BorderLayout());
 		
 		
 		//String[] comboData=gestionSuivi.placement.Placement.getNames();
@@ -38,7 +38,7 @@ public class TableauTransaction extends JPanel{
 		};
 		
 	    //Les titres des colonnes
-	    String  title[] = {"Date", "Compte", "Prix unitaire", "Add UC", "Dim UC", "Add €", "Dim €", "Suppr."};
+	    String  title[] = {"Date", "Compte", "Prix unit.", "Add (UC)", "Dim (UC)", "Add (€)", "Dim (€)", "Suppr."};
 	    
 	    JComboBox combo = new JComboBox(listeCompte);
 	    
@@ -56,10 +56,15 @@ public class TableauTransaction extends JPanel{
 				((ZModel)tableau.getModel()).addRow(ligneDefault);
 			}
 		}
+		
+		class SvgListener implements ActionListener{
+			public void actionPerformed(ActionEvent event){		
+				((ZModel)tableau.getModel()).addRow(ligneDefault);
+			}
+		}
 	    
 	    nouvelleLigne.addActionListener(new AddListener());
 	    
-	    tableau = new JTable(data, title);
 	    this.add(new JScrollPane(tableau), BorderLayout.CENTER);
 	    this.add(nouvelleLigne, BorderLayout.SOUTH);
 	    

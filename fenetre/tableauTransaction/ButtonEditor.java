@@ -22,9 +22,9 @@ public class ButtonEditor extends DefaultCellEditor {
 	    super(checkBox);
 	     //On crée à nouveau notre bouton
 	    button = new JButton();
-	     button.setOpaque(true);
-	     //On lui attribue un listener
-	     button.addActionListener(bListener);
+	    button.setOpaque(true);
+	    //On lui attribue un listener
+	    button.addActionListener(bListener);
 	 }
 	
 	 public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column){

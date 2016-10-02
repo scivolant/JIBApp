@@ -7,6 +7,7 @@ public class ZModel extends AbstractTableModel {
 	  private String[] title;
 	  
 	  public ZModel(Object[][] data, String[] title){
+		  super();
 		  this.data=data;
 		  this.title=title;
 	  }
@@ -29,7 +30,7 @@ public class ZModel extends AbstractTableModel {
 	  
 	  public void setValueAt(Object value, int row, int col){
 		  if (!this.getColumnName(col).equals("Age") && 
-				  !this.getColumnName(col).equals("Suppression"))
+				  !this.getColumnName(col).equals("Suppr."))
 		  this.data[row][col]=value;
 	  }
 	  
