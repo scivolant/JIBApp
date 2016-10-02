@@ -84,4 +84,8 @@ public class ZModel extends AbstractTableModel {
 		  */
 		  return true;
 	  }
+	  
+	  public Object[][] getData(){
+		  return this.data;
+	  }
 }

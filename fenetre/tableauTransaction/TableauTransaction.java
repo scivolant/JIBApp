@@ -37,7 +37,7 @@ import gestionSuivi.placement.Placement;
 public class TableauTransaction extends JPanel{
 	private Placement place;
 	private JTable tableau;
-	private Compte[] listeCompte = Compte.values();
+	private ZModel model;
 	private JButton nouvelleLigne = new JButton("Ajouter une ligne");
 	private JButton sauvegarde = new JButton("Sauvegarde");
 	
@@ -80,6 +80,7 @@ public class TableauTransaction extends JPanel{
 	    //Les titres des colonnes
 	    String  title[] = {"Date", "Compte", "Prix unit.", "Add (UC)", "Dim (UC)", "Add (€)", "Dim (€)", "Suppr."};
 	    
+		Compte[] listeCompte = Compte.values();
 	    JComboBox combo = new JComboBox(listeCompte);
 	    
 	    ZModel model = new ZModel(data, title);
@@ -98,11 +99,11 @@ public class TableauTransaction extends JPanel{
 		}
 		
 		class SvgListener implements ActionListener{
-			Object[][] data;
+			ZModel model;
 			
-			public SvgListener(Object[][] data){
+			public SvgListener(ZModel model){
 				super();
-				this.data=data;
+				this.model=model;
 			}
 			
 			public void actionPerformed(ActionEvent event){
@@ -116,8 +117,10 @@ public class TableauTransaction extends JPanel{
 			                  new File(dataInterf.nameSvg(place)))));
 			            
 			      try {
-			        oos.writeObject(data);
+			        oos.writeObject(this.model.getData());
 			        System.out.println("Svg effectuée ! "+place.getName());
+			        System.out.println("nbr lignes : "+model.getData().length);
+			        System.out.println(this.model.getData());
 			      } catch (IOException e) {
 			        e.printStackTrace();
 			      }
@@ -133,7 +136,7 @@ public class TableauTransaction extends JPanel{
 		}
 	    
 	    nouvelleLigne.addActionListener(new AddListener());
-	    sauvegarde.addActionListener(new SvgListener(data));
+	    sauvegarde.addActionListener(new SvgListener(model));
 	    
 	    GridLayout gl = new GridLayout(1,2);
 	    gl.setHgap(5);
