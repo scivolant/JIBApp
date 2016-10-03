@@ -120,7 +120,7 @@ public class DataIni implements DataInterf {
 	
 	public float prixMoyen(Placement place, ZModel model){
 		float prix;
-		prix = this.totalUC(place, model)/this.totalEUR(place, model);
+		prix = this.totalEUR(place, model)/this.totalUC(place, model);
 		return prix;
 	}
 }

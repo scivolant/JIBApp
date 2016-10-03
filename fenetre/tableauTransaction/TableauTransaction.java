@@ -29,7 +29,9 @@ public class TableauTransaction extends JPanel{
 	private JTable tableau;
 	private ZModel model;
 	private JButton nouvelleLigne = new JButton("Ajouter une ligne");
+	private JButton miseAJour = new JButton("M‡J");
 	private JButton sauvegarde = new JButton("Sauvegarde");
+	private PanSynthese panSynthese; 
 	
 	public TableauTransaction(Placement place){
 		super(new BorderLayout());
@@ -76,33 +78,35 @@ public class TableauTransaction extends JPanel{
 				dataInterf.svgData(place, model);
 			}
 		}
+		
+		class UpdateListener implements ActionListener{
+			public void actionPerformed(ActionEvent event){		
+				panSynthese.setDonnes(String.format("%.2f", dataInterf.prixMoyen(place, model)),
+	    							  String.format("%.4f", dataInterf.totalUC(place, model)),
+	    							  String.format("%.2f", dataInterf.totalEUR(place, model)));
+			}
+		}
 	    
 	    nouvelleLigne.addActionListener(new AddListener());
+	    miseAJour.addActionListener(new UpdateListener());
 	    sauvegarde.addActionListener(new SvgListener(model));
 	    
-	    GridLayout gl1 = new GridLayout(1,2);
+	    GridLayout gl1 = new GridLayout(1,3);
 	    gl1.setHgap(5);
 	    JPanel pan1 = new JPanel(gl1);
 	    pan1.add(nouvelleLigne);
+	    pan1.add(miseAJour);
 	    pan1.add(sauvegarde);
 	    
-	    GridLayout gl2 = new GridLayout(1,6);
-	    gl2.setHgap(5);
-	    JPanel pan2 = new JPanel(gl2);
-	    pan2.add(new JLabel("Prix moyen : "));
-	    pan2.add(new JLabel(String.format("%.4f",dataInterf.prixMoyen(place, model))));
-	    pan2.add(new JLabel("Total UC : "));
-	    pan2.add(new JLabel(String.format("%.4f",dataInterf.totalUC(place, model))));
-	    pan2.add(new JLabel("Total EUR : "));
-	    pan2.add(new JLabel(String.format("%.2f",dataInterf.totalEUR(place, model))));
+	    panSynthese = new PanSynthese(String.format("%.2f", dataInterf.prixMoyen(place, model)),
+	    							  String.format("%.4f", dataInterf.totalUC(place, model)),
+	    							  String.format("%.2f", dataInterf.totalEUR(place, model)));
 	    
 	    JPanel pan = new JPanel(new GridLayout(2,1));
-	    pan.add(pan2);
+	    pan.add(panSynthese);
 	    pan.add(pan1);
 	    
 	    this.add(new JScrollPane(tableau), BorderLayout.CENTER);
 	    this.add(pan, BorderLayout.SOUTH);
-	    
-
 	}
 }
