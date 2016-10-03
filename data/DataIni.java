@@ -50,9 +50,11 @@ public class DataIni implements DataInterf {
 	            
 	      try {
 	        oos.writeObject(model.getData());
+	        /*
 	        System.out.println("Svg effectuée ! "+place.getName());
 	        System.out.println("nbr lignes : "+model.getData().length);
 	        System.out.println(model.getData());
+	        */
 	      } catch (IOException e) {
 	        e.printStackTrace();
 	      }
@@ -78,7 +80,7 @@ public class DataIni implements DataInterf {
 	            
 	      try {
 	        data = (Object[][])ois.readObject();
-		    System.err.println("Fichier retrouvé et lu... "+place.getName());
+		    System.out.println("Fichier retrouvé et lu... "+place.getName());
 	      } catch (ClassNotFoundException e) {
 		    System.err.println("Problème : ClassNotFoundException");
 	        e.printStackTrace();

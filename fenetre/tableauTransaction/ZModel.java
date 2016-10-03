@@ -76,13 +76,9 @@ public class ZModel extends AbstractTableModel {
 	  }
 	  
 	  public boolean isCellEditable(int row, int col){
-		  /*
-		  if (!this.getColumnName(col).equals("Age") && 
-				  !this.getColumnName(col).equals("Suppression")) 
+		  if (!this.getColumnName(col).equals("Prix unit.") )
 			  return true; 
 		  else return false;
-		  */
-		  return true;
 	  }
 	  
 	  public Object[][] getData(){

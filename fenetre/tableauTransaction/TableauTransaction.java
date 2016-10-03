@@ -60,6 +60,8 @@ public class TableauTransaction extends JPanel{
 	    this.tableau = new JTable(model);
 	    this.tableau.setRowHeight(30);
 	    
+	    this.tableau.getColumn("Prix unit.").setCellRenderer(new ComputationRenderer());
+	    
 	    this.tableau.getColumn("Compte").setCellEditor(new DefaultCellEditor(combo));
 	    
 	    this.tableau.getColumn("Suppr.").setCellRenderer(new ButtonRenderer());
