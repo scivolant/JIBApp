@@ -13,4 +13,10 @@ public interface DataInterf {
 	public void svgData(Placement place, ZModel model);
 	
 	public Object[][] lireData(Placement place);
+	
+	public float totalUC(Placement place, ZModel model);
+	
+	public float totalEUR(Placement place, ZModel model);
+	
+	public float prixMoyen(Placement place, ZModel model);
 }

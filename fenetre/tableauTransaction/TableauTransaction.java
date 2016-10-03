@@ -4,22 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -90,11 +80,25 @@ public class TableauTransaction extends JPanel{
 	    nouvelleLigne.addActionListener(new AddListener());
 	    sauvegarde.addActionListener(new SvgListener(model));
 	    
-	    GridLayout gl = new GridLayout(1,2);
-	    gl.setHgap(5);
-	    JPanel pan = new JPanel(gl);
-	    pan.add(nouvelleLigne);
-	    pan.add(sauvegarde);
+	    GridLayout gl1 = new GridLayout(1,2);
+	    gl1.setHgap(5);
+	    JPanel pan1 = new JPanel(gl1);
+	    pan1.add(nouvelleLigne);
+	    pan1.add(sauvegarde);
+	    
+	    GridLayout gl2 = new GridLayout(1,6);
+	    gl2.setHgap(5);
+	    JPanel pan2 = new JPanel(gl2);
+	    pan2.add(new JLabel("Prix moyen : "));
+	    pan2.add(new JLabel(String.format("%.4f",dataInterf.prixMoyen(place, model))));
+	    pan2.add(new JLabel("Total UC : "));
+	    pan2.add(new JLabel(String.format("%.4f",dataInterf.totalUC(place, model))));
+	    pan2.add(new JLabel("Total EUR : "));
+	    pan2.add(new JLabel(String.format("%.2f",dataInterf.totalEUR(place, model))));
+	    
+	    JPanel pan = new JPanel(new GridLayout(2,1));
+	    pan.add(pan2);
+	    pan.add(pan1);
 	    
 	    this.add(new JScrollPane(tableau), BorderLayout.CENTER);
 	    this.add(pan, BorderLayout.SOUTH);

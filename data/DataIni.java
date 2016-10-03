@@ -99,4 +99,28 @@ public class DataIni implements DataInterf {
 	    }
 	  return data;
 	}
+	
+	public float totalUC(Placement place, ZModel model){
+		float totUC=0;
+		int totRow = model.getRowCount();
+		for (int i=0; i<totRow; i++){
+			totUC += (float)model.getValueAt(i, 3) - (float)model.getValueAt(i, 4);
+		}
+		return totUC;
+	}
+	
+	public float totalEUR(Placement place, ZModel model){
+		float totEUR=0;
+		int totRow = model.getRowCount();
+		for (int i=0; i<totRow; i++){
+			totEUR += (float)model.getValueAt(i, 5) - (float)model.getValueAt(i, 6);
+		}
+		return totEUR;
+	}
+	
+	public float prixMoyen(Placement place, ZModel model){
+		float prix;
+		prix = this.totalUC(place, model)/this.totalEUR(place, model);
+		return prix;
+	}
 }
