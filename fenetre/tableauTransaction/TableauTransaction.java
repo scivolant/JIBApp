@@ -75,10 +75,10 @@ public class TableauTransaction extends JPanel{
 				// Sauvegarde des données modifiées
 				dataInterf.svgData(place, model);
 				
-				// mise à jour du panneau synthèse
-				panSynthese.setDonnes(String.format("%.2f", dataInterf.prixMoyen(place, model)),
+				// mise à jour du panneau synthèse (sur des données à jour)
+				panSynthese.setDonnes(String.format("%.2f", dataInterf.prixMoyen(place)),
 	    							  String.format("%.4f", dataInterf.totalUC(place)),
-	    							  String.format("%.2f", dataInterf.totalEUR(place, model)));
+	    							  String.format("%.2f", dataInterf.totalEUR(place)));
 			}
 		}
 	    
@@ -91,9 +91,9 @@ public class TableauTransaction extends JPanel{
 	    pan1.add(nouvelleLigne);
 	    pan1.add(sauvegarde);
 	    
-	    panSynthese = new PanSynthese(String.format("%.2f", dataInterf.prixMoyen(place, model)),
+	    panSynthese = new PanSynthese(String.format("%.2f", dataInterf.prixMoyen(place)),
 	    							  String.format("%.4f", dataInterf.totalUC(place)),
-	    							  String.format("%.2f", dataInterf.totalEUR(place, model)));
+	    							  String.format("%.2f", dataInterf.totalEUR(place)));
 	    
 	    JPanel pan = new JPanel(new GridLayout(2,1));
 	    pan.add(panSynthese);

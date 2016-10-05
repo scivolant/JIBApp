@@ -24,7 +24,7 @@ public interface DataInterf {
 	
 	public float totalUC(Placement place);
 	
-	public float totalEUR(Placement place, ZModel model);
+	public float totalEUR(Placement place);
 	
-	public float prixMoyen(Placement place, ZModel model);
+	public float prixMoyen(Placement place);
 }
