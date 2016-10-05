@@ -9,9 +9,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
 
 import gestionSuivi.compte.Compte;
 import gestionSuivi.fenetre.tableauTransaction.ZModel;
+import gestionSuivi.placement.GestionTypes;
 import gestionSuivi.placement.Placement;
 
 public class DataIni implements DataInterf {
@@ -77,11 +79,6 @@ public class DataIni implements DataInterf {
 	            
 	      try {
 	        oos.writeObject(model.getData());
-	        /*
-	        System.out.println("Svg effectuée ! "+place.getName());
-	        System.out.println("nbr lignes : "+model.getData().length);
-	        System.out.println(model.getData());
-	        */
 	      } catch (IOException e) {
 	        e.printStackTrace();
 	      }
@@ -157,5 +154,29 @@ public class DataIni implements DataInterf {
 		float prix;
 		prix = this.totalEUR(place)/this.totalUC(place);
 		return prix;
+	}
+	
+	public Object[][] accueilData(){
+		// renvoie les données nécessaires pour remplir le tableau d'accueil.
+		int nbTypes = GestionTypes.values().length;
+		float[] totauxEUR = new float[nbTypes];
+		float totalG = 0;
+		Arrays.fill(totauxEUR,0f);
+		for (Placement place:Placement.values()){
+			totauxEUR[place.getType().getIndex()]+=totalEUR(place);
+			totalG += totalEUR(place);
+		}
+		if (totalG==0){
+			System.err.println("Somme totale (EUR) nulle, remplacée par 1");
+			totalG=1;
+		}
+		Object[][] data = new Object[nbTypes][3];
+		// filling in the first column:
+		for (GestionTypes type:GestionTypes.values()){
+			data[type.getIndex()][0]=type.toString();
+			data[type.getIndex()][1]=totauxEUR[type.getIndex()];
+			data[type.getIndex()][2]=totauxEUR[type.getIndex()]/totalG;
+		}
+		return data;
 	}
 }
