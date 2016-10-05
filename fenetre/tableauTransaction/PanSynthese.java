@@ -19,7 +19,7 @@ public class PanSynthese extends JPanel {
 	    this.totUC = new JLabel(totalUCS);
 	    this.totEUR = new JLabel(totalEURS);
 		
-	    this.add(new JLabel("Prix moyen : "));
+	    this.add(new JLabel("Prix d'équilibre : "));
 	    this.add(prixM);
 	    this.add(new JLabel("Total UC : "));
 	    this.add(totUC);

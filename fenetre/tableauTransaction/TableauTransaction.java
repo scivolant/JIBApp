@@ -27,17 +27,15 @@ import gestionSuivi.placement.Placement;
 public class TableauTransaction extends JPanel{
 	private Placement place;
 	private JTable tableau;
-	private ZModel model;
 	private JButton nouvelleLigne = new JButton("Ajouter une ligne");
-	private JButton miseAJour = new JButton("MàJ");
-	private JButton sauvegarde = new JButton("Sauvegarde");
+	private JButton sauvegarde = new JButton("Svg/MàJ");
 	private PanSynthese panSynthese; 
 	
 	public TableauTransaction(Placement place){
 		super(new BorderLayout());
 		this.place = place;
 		
-		DataInterf dataInterf = new DataIni();
+		DataInterf dataInterf = DataIni.getInstance();
 		
 		// Chercher la sauvegarde pour le placement concerné :
 		Object[][] data = dataInterf.lireData(place);
@@ -74,32 +72,27 @@ public class TableauTransaction extends JPanel{
 			}
 			
 			public void actionPerformed(ActionEvent event){
-				DataInterf dataInterf = new DataIni();
+				// Sauvegarde des données modifiées
 				dataInterf.svgData(place, model);
-			}
-		}
-		
-		class UpdateListener implements ActionListener{
-			public void actionPerformed(ActionEvent event){		
+				
+				// mise à jour du panneau synthèse
 				panSynthese.setDonnes(String.format("%.2f", dataInterf.prixMoyen(place, model)),
-	    							  String.format("%.4f", dataInterf.totalUC(place, model)),
+	    							  String.format("%.4f", dataInterf.totalUC(place)),
 	    							  String.format("%.2f", dataInterf.totalEUR(place, model)));
 			}
 		}
 	    
 	    nouvelleLigne.addActionListener(new AddListener());
-	    miseAJour.addActionListener(new UpdateListener());
 	    sauvegarde.addActionListener(new SvgListener(model));
 	    
 	    GridLayout gl1 = new GridLayout(1,3);
 	    gl1.setHgap(5);
 	    JPanel pan1 = new JPanel(gl1);
 	    pan1.add(nouvelleLigne);
-	    pan1.add(miseAJour);
 	    pan1.add(sauvegarde);
 	    
 	    panSynthese = new PanSynthese(String.format("%.2f", dataInterf.prixMoyen(place, model)),
-	    							  String.format("%.4f", dataInterf.totalUC(place, model)),
+	    							  String.format("%.4f", dataInterf.totalUC(place)),
 	    							  String.format("%.2f", dataInterf.totalEUR(place, model)));
 	    
 	    JPanel pan = new JPanel(new GridLayout(2,1));
@@ -108,5 +101,9 @@ public class TableauTransaction extends JPanel{
 	    
 	    this.add(new JScrollPane(tableau), BorderLayout.CENTER);
 	    this.add(pan, BorderLayout.SOUTH);
+	}
+	
+	public JTable getTableau(){
+		return this.tableau;
 	}
 }

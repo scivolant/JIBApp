@@ -15,6 +15,29 @@ import gestionSuivi.fenetre.tableauTransaction.ZModel;
 import gestionSuivi.placement.Placement;
 
 public class DataIni implements DataInterf {
+	private static DataIni instance= new DataIni();
+	private static int nbInstance =0;
+	/*
+	// nbr de colonnes dans un tableau de dataTrans
+	private static int nbCol = 8;
+	*/
+	
+	
+	private Object[][][] dataTransG;
+	
+	private DataIni(){
+		nbInstance +=1;
+		System.out.println(nbInstance);
+		int nbPlace = Placement.values().length;
+		dataTransG = new Object[nbPlace][][];
+		for (Placement place:Placement.values()){
+			dataTransG[place.getIndex()]=this.fetchData(place);
+		}
+	}
+	
+	public static DataIni getInstance(){
+		return instance;
+	}
 
 	@Override
 	public String nameSvg(Placement place) {
@@ -28,7 +51,7 @@ public class DataIni implements DataInterf {
 			      {"16/08/1983", listeCompte[0], new Float(15.0d), new Float(1), new Float(0), new Float(15d), new Float(0), "-"},
 			      {"01/01/2001", listeCompte[0], new Float(15.0d), new Float(0), new Float(2), new Float(0), new Float(30),"-"},
 			      {"02/02/2002", listeCompte[0], new Float(15.0d), new Float(3), new Float(0), new Float(45d), new Float(0),"-"},
-			      {"13/12/2013", listeCompte[0], new Float(15.0d), new Float(0), new Float(4), new Float(0d), new Float(60d),"-"}		
+			      {"13/12/2013", listeCompte[0], new Float(15.0d), new Float(0), new Float(1), new Float(0d), new Float(10d),"-"}		
 				};
 		return data;
 	}
@@ -40,6 +63,10 @@ public class DataIni implements DataInterf {
 	}
 
 	public void svgData(Placement place, ZModel model){
+		// mise à jour de la copie de dataTransG
+		this.dataTransG[place.getIndex()]=model.getData();
+		
+		// sauvegarde dans un fichier externe.
 	    ObjectOutputStream oos;
 	    try {	
 	      //On envoie maintenant les données !
@@ -69,6 +96,10 @@ public class DataIni implements DataInterf {
 	}
 	
 	public Object[][] lireData(Placement place){
+		return this.dataTransG[place.getIndex()];
+	}
+	
+	public Object[][] fetchData(Placement place){
 	    ObjectInputStream ois;
 	    Object[][] data;
 	    try {	
@@ -100,11 +131,11 @@ public class DataIni implements DataInterf {
 	  return data;
 	}
 	
-	public float totalUC(Placement place, ZModel model){
+	public float totalUC(Placement place){
 		float totUC=0;
-		int totRow = model.getRowCount();
+		int totRow = this.dataTransG[place.getIndex()].length;
 		for (int i=0; i<totRow; i++){
-			totUC += (float)model.getValueAt(i, 3) - (float)model.getValueAt(i, 4);
+			totUC += (float)this.dataTransG[place.getIndex()][i][3] - (float)this.dataTransG[place.getIndex()][i][4];
 		}
 		return totUC;
 	}
@@ -112,15 +143,19 @@ public class DataIni implements DataInterf {
 	public float totalEUR(Placement place, ZModel model){
 		float totEUR=0;
 		int totRow = model.getRowCount();
-		for (int i=0; i<totRow; i++){
-			totEUR += (float)model.getValueAt(i, 5) - (float)model.getValueAt(i, 6);
-		}
+		if (totRow == 0) {
+			return 0;
+		} else {
+			for (int i=0; i<totRow; i++){
+				totEUR += (float)model.getValueAt(i, 5) - (float)model.getValueAt(i, 6);
+			}
 		return totEUR;
+		}
 	}
 	
 	public float prixMoyen(Placement place, ZModel model){
 		float prix;
-		prix = this.totalEUR(place, model)/this.totalUC(place, model);
+		prix = this.totalEUR(place, model)/this.totalUC(place);
 		return prix;
 	}
 }

@@ -4,22 +4,26 @@ import gestionSuivi.placement.GestionTypes;
 
 public enum Placement {
 	
-	FidelityEuro("Fidelity Europe","FidelityEuro",GestionTypes.OPCVM, "FRxx", "FE"),
-	CarmignacEm("Carmignac Emergent","CarmignacEm",GestionTypes.OPCVM, "FRyy", "CE"),
-	LyxorETFEuro("Lyxor ETF Euro","LyxorETFEuro",GestionTypes.ETF, "FRzz", "LE");
+	FidelityEuro("Fidelity Europe","FidelityEuro",GestionTypes.OPCVM, "FRxx", "FE",0),
+	CarmignacEm("Carmignac Emergent","CarmignacEm",GestionTypes.OPCVM, "FRyy", "CE",1),
+	LyxorETFEuro("Lyxor ETF Euro","LyxorETFEuro",GestionTypes.ETF, "FRzz", "LE",2),
+	BienImmo1("Bien Immobilier 1","BienImmo1",GestionTypes.Immo, "FRaa", "BI",3),
+	Obligations1("Obligations 1", "Obligations1", GestionTypes.Obligations, "FRbb", "O1",4);
 	
 	private String name;
 	private String mnemo;
 	private GestionTypes type;
 	private String ISIN;
 	private String codeMaJ;
+	private int index;
 
-	Placement(String name, String mnemo, GestionTypes type, String ISIN, String codeMaJ){
+	Placement(String name, String mnemo, GestionTypes type, String ISIN, String codeMaJ, int index){
 		this.name = name;
 		this.mnemo = mnemo;
 		this.type = type;
 		this.ISIN = ISIN;
 		this.codeMaJ= codeMaJ;
+		this.index=index;
 	}
 	
 	// collection de "getters"
@@ -50,6 +54,10 @@ public enum Placement {
 	
 	public String getCodeMaJ(){
 		return this.codeMaJ;
+	}
+	
+	public int getIndex(){
+		return this.index;
 	}
 	
 	// Collection de "setters"

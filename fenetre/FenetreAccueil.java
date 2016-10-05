@@ -11,6 +11,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import gestionSuivi.placement.GestionTypes;
+
 import javax.swing.BoxLayout;
 
 import javax.swing.JButton;
@@ -19,53 +22,34 @@ import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 
 public class FenetreAccueil extends JPanel {
-	private JPanel panGauche = new JPanel();
 	private JPanel panDroite = new JPanel();
-	
-	private JComboBox combo;
-	private JLabel label = new JLabel();
 	
 	public FenetreAccueil(){
 		super();
-		GridLayout gl = new GridLayout(); 
-		this.setLayout(gl);
-		
-		/*
-		// =============================
-		// Définition du panneau gauche
-		// =============================
-		panGauche.setLayout(new GridLayout(2,1));
-		
-		// Comptes à sélectionner :
-		JPanel hautG = new JPanel();
-		JLabel labelGG = new JLabel("Comptes : ");
-		JPanel panCompte = new JPanel();
-		panCompte.setLayout(new BoxLayout(panCompte, BoxLayout.PAGE_AXIS));
-		String[] tabCompte = {"Compte 1", "Compte 2", "Compte 3"};
-		JCheckBox[] tab_check = new JCheckBox[tabCompte.length];
-		for (int i = 0; i<tabCompte.length; i++){
-			tab_check[i]=new JCheckBox(tabCompte[i]);
-			panCompte.add(tab_check[i]);
-		}
-		hautG.add(labelGG);
-		hautG.add(panCompte);
-		
-		// Examen de placements...
-		label.setText("Examiner : ");
-		String[] tab = {"","Placement 1","Placement 2", "Placement 3"};
-		combo = new JComboBox(tab);
-		combo.setPreferredSize(new Dimension(200,20));
-		// Ajout du Listener
-		//combo.addActionListener(new ItemAction());
-		
-		JPanel basG = new JPanel();
-		basG.add(label);
-		basG.add(combo);
-		
-		panGauche.add(hautG);
-		panGauche.add(basG);
-		*/
+		BorderLayout bl = new BorderLayout(); 
+		this.setLayout(bl);
 
+		this.add(new JLabel("Répartition des sommes :"), BorderLayout.NORTH);
+		
+		int nbLigne = GestionTypes.values().length;
+		System.out.println(nbLigne);
+		JPanel tableauRepartition = new JPanel();
+		GridLayout gl = new GridLayout(nbLigne+2,3);
+		gl.setHgap(-5);
+		tableauRepartition.setLayout(gl);
+		// Première ligne
+		tableauRepartition.add(new JLabel("Type"));
+		tableauRepartition.add(new JLabel("Euros"));
+		tableauRepartition.add(new JLabel("%"));
+		// Lignes suivantes
+		for (int i=0; i<nbLigne; i++){
+			tableauRepartition.add(new JLabel(GestionTypes.values()[i].toString()));
+			tableauRepartition.add(new JLabel("bla"));
+			tableauRepartition.add(new JLabel("bli"));
+		}
+		
+		this.add(tableauRepartition, BorderLayout.CENTER);
+		
 		// Définition du panneau droit
 		panDroite.setLayout(new BorderLayout());
 		JLabel hautD = new JLabel("Somme totale");
@@ -77,17 +61,7 @@ public class FenetreAccueil extends JPanel {
 		
 		// Ajout des deux panneaux...
 		//this.add(panGauche);
-		this.add(panDroite);
+		//this.add(panDroite);
 		this.setVisible(true);
 	}
 }
-	
-	/*
-	class ItemAction implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			System.out.println("Examiner "+combo.getSelectedItem());
-			if (combo.getSelectedItem().equals(""))
-				gestionSuivi.setContent(gestionSuivi.fenetrePlacement);
-		}
-	}
-*/
