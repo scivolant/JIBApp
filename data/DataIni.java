@@ -12,7 +12,7 @@ import java.io.ObjectOutputStream;
 import java.util.Arrays;
 
 import gestionSuivi.compte.Compte;
-import gestionSuivi.fenetre.tableauTransaction.ZModel;
+import gestionSuivi.fenetrePlacement.ZModel;
 import gestionSuivi.placement.GestionTypes;
 import gestionSuivi.placement.Placement;
 
@@ -170,13 +170,21 @@ public class DataIni implements DataInterf {
 			System.err.println("Somme totale (EUR) nulle, remplacée par 1");
 			totalG=1;
 		}
-		Object[][] data = new Object[nbTypes][3];
-		// filling in the first column:
+		Object[][] data = new Object[nbTypes+1][3];
+		float totalPourcent=0;
+		float temp;
+		// remplir les premières lignes:
 		for (GestionTypes type:GestionTypes.values()){
+			temp=totauxEUR[type.getIndex()];
 			data[type.getIndex()][0]=type.toString();
-			data[type.getIndex()][1]=totauxEUR[type.getIndex()];
-			data[type.getIndex()][2]=totauxEUR[type.getIndex()]/totalG;
+			data[type.getIndex()][1]=temp;
+			data[type.getIndex()][2]=temp/totalG;
+			totalPourcent+=temp/totalG;
 		}
+		// remplir la dernière ligne
+		data[nbTypes][0]="Total";
+		data[nbTypes][1]=totalG;
+		data[nbTypes][2]=totalPourcent;
 		return data;
 	}
 }

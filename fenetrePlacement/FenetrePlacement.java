@@ -1,12 +1,10 @@
-package gestionSuivi.fenetre;
+package gestionSuivi.fenetrePlacement;
 
 import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import gestionSuivi.fenetre.tableauTransaction.TableauTransaction;
-import gestionSuivi.fenetre.tableauTransaction.ZModel;
 import gestionSuivi.placement.Placement;
 
 public class FenetrePlacement extends JPanel {

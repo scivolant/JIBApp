@@ -1,4 +1,4 @@
-package gestionSuivi.fenetre.tableauTransaction;
+package gestionSuivi.fenetrePlacement;
 
 import java.awt.GridLayout;
 
@@ -19,7 +19,7 @@ public class PanSynthese extends JPanel {
 	    this.totUC = new JLabel(totalUCS);
 	    this.totEUR = new JLabel(totalEURS);
 		
-	    this.add(new JLabel("Prix d'équilibre : "));
+	    this.add(new JLabel("Prix équil. : "));
 	    this.add(prixM);
 	    this.add(new JLabel("Total UC : "));
 	    this.add(totUC);

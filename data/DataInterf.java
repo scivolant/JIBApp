@@ -1,6 +1,6 @@
 package gestionSuivi.data;
 
-import gestionSuivi.fenetre.tableauTransaction.ZModel;
+import gestionSuivi.fenetrePlacement.ZModel;
 import gestionSuivi.placement.Placement;
 
 public interface DataInterf {
@@ -27,4 +27,6 @@ public interface DataInterf {
 	public float totalEUR(Placement place);
 	
 	public float prixMoyen(Placement place);
+	
+	public Object[][] accueilData();
 }

@@ -1,9 +1,9 @@
 package gestionSuivi;
 
-import gestionSuivi.fenetre.FenetreAccueil;
-import gestionSuivi.fenetre.FenetrePlacement;
+import gestionSuivi.fenetrePlacement.FenetrePlacement;
 import gestionSuivi.placement.Placement;
 import gestionSuivi.compte.Compte;
+import gestionSuivi.fenetreAccueil.FenetreAccueil;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;

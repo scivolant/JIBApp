@@ -1,4 +1,4 @@
-package gestionSuivi.fenetre.tableauTransaction;
+package gestionSuivi.fenetrePlacement;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -29,8 +29,7 @@ public class ZModel extends AbstractTableModel {
 	  }
 	  
 	  public void setValueAt(Object value, int row, int col){
-		  if (!this.getColumnName(col).equals("Age") && 
-				  !this.getColumnName(col).equals("Suppr."))
+		  if (!this.getColumnName(col).equals("Suppr."))
 		  this.data[row][col]=value;
 	  }
 	  

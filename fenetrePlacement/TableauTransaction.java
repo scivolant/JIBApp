@@ -1,4 +1,4 @@
-package gestionSuivi.fenetre.tableauTransaction;
+package gestionSuivi.fenetrePlacement;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;

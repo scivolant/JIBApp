@@ -1,4 +1,4 @@
-package gestionSuivi.fenetre.tableauTransaction;
+package gestionSuivi.fenetrePlacement;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -10,7 +10,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-import gestionSuivi.fenetre.tableauTransaction.ZModel;
+import gestionSuivi.fenetrePlacement.ZModel;
 
 public class ButtonEditor extends DefaultCellEditor {
 	    
