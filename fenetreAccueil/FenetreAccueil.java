@@ -31,6 +31,7 @@ public class FenetreAccueil extends JPanel {
 	    
 	    ZModel2 model = new ZModel2(data, title);
 	    this.tableauRepartition = new JTable(model);
+	    this.tableauRepartition.setAutoCreateColumnsFromModel(false); // pour ne pas perdre le formatage en cas de setDataVector...
 	    this.tableauRepartition.setRowHeight(30);
 	    
 	    this.tableauRepartition.getColumn("Euros").setCellRenderer(new NumberRenderer());
@@ -38,19 +39,13 @@ public class FenetreAccueil extends JPanel {
 	    
 	    // Bouton et son listener
 	    class MaJListener implements ActionListener{
-			ZModel2 model;
-			
-			public MaJListener(ZModel2 model){
-				super();
-				this.model=model;
-			}
 			
 			public void actionPerformed(ActionEvent event){
 				// mise à jour du panneau synthèse (sur des données à jour)
-				model.setDataVector(dataInterf.accueilData(),title);
+				((ZModel2) tableauRepartition.getModel()).setDataVector(dataInterf.accueilData(),title);
 			}
 		}
-	    maJ.addActionListener(new MaJListener(model));
+	    maJ.addActionListener(new MaJListener());
 		
 		// Mise en place finale
 	    JPanel pan = new JPanel();

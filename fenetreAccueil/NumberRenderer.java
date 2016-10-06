@@ -16,6 +16,7 @@ public class NumberRenderer extends JLabel implements TableCellRenderer {
 	  NumberFormat nf = NumberFormat.getInstance(Locale.FRENCH);
 	  nf.setMaximumFractionDigits(2);
 	  setText(nf.format(value));
+	  setHorizontalAlignment(JLabel.RIGHT);
 	  return this;
    }
 
