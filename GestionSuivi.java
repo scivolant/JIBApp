@@ -104,7 +104,9 @@ public class GestionSuivi {
 		fg.setVisible(true);
 	}
 	
-
+	public JFrame getFrame(){
+		return this.fg;
+	}
 	
 	public static void main(String[] args){
 		new GestionSuivi();

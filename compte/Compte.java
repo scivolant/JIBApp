@@ -1,7 +1,7 @@
 package gestionSuivi.compte;
 
 public enum Compte {
-	Compte_1,
-	Compte_2,
+	Epargnissimo_AV,
+	Epargnissimo_retraite,
 	Compte_3;
 }

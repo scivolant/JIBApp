@@ -31,7 +31,7 @@ public class FenetreAccueil extends JPanel {
 	    
 	    ZModel2 model = new ZModel2(data, title);
 	    this.tableauRepartition = new JTable(model);
-	    this.tableauRepartition.setAutoCreateColumnsFromModel(false); // pour ne pas perdre le formatage en cas de setDataVector...
+	    this.tableauRepartition.setAutoCreateColumnsFromModel(false); // pour ne pas perdre le formatage en cas de setDataVector... (voir http://www.chka.de/swing/table/faq.html)
 	    this.tableauRepartition.setRowHeight(30);
 	    
 	    this.tableauRepartition.getColumn("Euros").setCellRenderer(new NumberRenderer());
