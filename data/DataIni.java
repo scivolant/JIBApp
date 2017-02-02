@@ -16,25 +16,40 @@ import gestionSuivi.fenetrePlacement.ZModel;
 import gestionSuivi.placement.GestionTypes;
 import gestionSuivi.placement.Placement;
 
+
+/*
+ * Une implémentation initiale du système de données (avec sauvegarde dans des fichiers...)
+ * À remplacer à terme par une base SQL.
+ */
+
 public class DataIni implements DataInterf {
 	private static DataIni instance= new DataIni();
-	private static int nbInstance =0;
 	/*
+	 * Implémentation simplifiée de "singleton" : initialisation dès que la classe est appelée !
+	 * 
 	// nbr de colonnes dans un tableau de dataTrans
 	private static int nbCol = 8;
 	*/
 	
+	// Les deux tableaux contenants les transactions et ordres
+	private Object[][][] dataTransG;	
+	private Object[][][] dataOrdresG;
 	
-	private Object[][][] dataTransG;
+	// Etats (sélectionnés ou non) des comptes
+	private Boolean[] comptesSelect;
 	
 	private DataIni(){
-		nbInstance +=1;
-		System.out.println(nbInstance);
 		int nbPlace = Placement.values().length;
 		dataTransG = new Object[nbPlace][][];
+		dataOrdresG = new Object[nbPlace][][];
 		for (Placement place:Placement.values()){
 			dataTransG[place.getIndex()]=this.fetchData(place);
+			dataOrdresG[place.getIndex()]=this.fetchDataOrdres(place);
 		}
+		Compte[] listCompte = Compte.values();
+		
+		// liste des comptes sélectionnés. Initialisé à "False"
+		comptesSelect = new Boolean[listCompte.length];
 	}
 	
 	public static DataIni getInstance(){
@@ -45,6 +60,11 @@ public class DataIni implements DataInterf {
 	public String nameSvg(Placement place) {
 		// TODO Auto-generated method stub
 		return "svg_"+place.getMnemo()+".TransSvg";
+	}
+	
+	public String nameSvgOrdres(Placement place) {
+		// TODO Auto-generated method stub
+		return "svg_"+place.getMnemo()+".OrdresSvg";
 	}
 	
 	public Object[][] defaultData(){
@@ -58,9 +78,26 @@ public class DataIni implements DataInterf {
 		return data;
 	}
 	
+	public Object[][] defaultDataOrdres(){
+		Compte[] listeCompte = Compte.values();
+		Object[][] data = {
+			      {listeCompte[0], new Float(20.0d), new Float(2), new Float(0), new Float(40), new Float(0),"Initialisation", "-"},
+			      {listeCompte[1], new Float(40.0d), new Float(0), new Float(2), new Float(0), new Float(80),"Initialisation","-"},
+			      {listeCompte[0], new Float(25.0d), new Float(3), new Float(0), new Float(75), new Float(0),"Initialisation","-"},
+			      {listeCompte[1], new Float(45.0d), new Float(0), new Float(3), new Float(0), new Float(135),"Initialisation","-"}		
+				};
+		return data;
+	}
+	
 	public Object[] defaultLine(){
 		Compte[] listeCompte = Compte.values();
 		Object[] ligneDefault= {"16/08/1983", listeCompte[0], new Float(15.0d), new Float(1), new Float(0), new Float(15d), new Float(0), "-"};
+		return ligneDefault;
+	}
+	
+	public Object[] defaultLineOrdres(){
+		Compte[] listeCompte = Compte.values();
+		Object[] ligneDefault= {listeCompte[0], new Float(20.0d), new Float(2), new Float(0), new Float(40), new Float(0),"Nouvelle ligne", "-"};
 		return ligneDefault;
 	}
 
@@ -92,8 +129,40 @@ public class DataIni implements DataInterf {
 	    }
 	}
 	
+	public void svgDataOrdres(Placement place, ZModel model){
+		// mise à jour de la copie de dataTransG
+		this.dataOrdresG[place.getIndex()]=model.getData();
+		
+		// sauvegarde dans un fichier externe.
+	    ObjectOutputStream oos;
+	    try {	
+	      //On envoie maintenant les données !
+	      oos = new ObjectOutputStream(
+	              new BufferedOutputStream(
+	                new FileOutputStream(
+	                  new File(this.nameSvgOrdres(place)))));
+	            
+	      try {
+	        oos.writeObject(model.getData());
+	      } catch (IOException e) {
+	        e.printStackTrace();
+	      }
+		
+	      oos.close();
+	        	
+	    } catch (FileNotFoundException e) {
+	      e.printStackTrace();
+	    } catch (IOException e) {
+	      e.printStackTrace();
+	    }
+	}
+	
 	public Object[][] lireData(Placement place){
 		return this.dataTransG[place.getIndex()];
+	}
+	
+	public Object[][] lireDataOrdres(Placement place){
+		return this.dataOrdresG[place.getIndex()];
 	}
 	
 	public Object[][] fetchData(Placement place){
@@ -124,6 +193,39 @@ public class DataIni implements DataInterf {
 	      System.err.println("Autre problème IO...");
 	      e.printStackTrace();
     	  data = this.defaultData();
+	    }
+	  return data;
+	}
+	
+	public Object[][] fetchDataOrdres(Placement place){
+	    ObjectInputStream ois;
+	    Object[][] data;
+	    try {	
+	      //On récupère maintenant les données !
+	      ois = new ObjectInputStream(
+	              new BufferedInputStream(
+	                new FileInputStream(
+	                  new File(this.nameSvgOrdres(place)))));
+	            
+	      try {
+	        data = (Object[][])ois.readObject();
+		    System.out.println("Fichier retrouvé et lu... "+place.getName());
+	      } catch (ClassNotFoundException e) {
+		    System.err.println("Problème : ClassNotFoundException");
+	        e.printStackTrace();
+	        // attention ! Il y a trois cas différents (ci-dessous) où on utilise defaultDataOrdres...
+	    	data = this.defaultDataOrdres();
+	      }
+		  
+	    ois.close();
+	        	
+	    } catch (FileNotFoundException e) {
+    	  System.err.println("Pas de sauvegarde trouvée, on prend les valeurs par défaut à la place !");
+    	  data = this.defaultDataOrdres();
+	    } catch (IOException e) {
+	      System.err.println("Autre problème IO...");
+	      e.printStackTrace();
+    	  data = this.defaultDataOrdres();
 	    }
 	  return data;
 	}
@@ -186,5 +288,9 @@ public class DataIni implements DataInterf {
 		data[nbTypes][1]=totalG;
 		data[nbTypes][2]=totalPourcent;
 		return data;
+	}
+	
+	public void updateCompte(Compte compte, Boolean isChecked){
+		comptesSelect[compte.getIndex()]=isChecked;
 	}
 }

@@ -85,10 +85,13 @@ public class GestionSuivi {
 		// ===============================
 		JPanel panCompte = new JPanel();
 		panCompte.setLayout(new BoxLayout(panCompte, BoxLayout.PAGE_AXIS));
-		JCheckBox[] tab_check = new JCheckBox[listCompte.length];
+		// initialise avec BoutonCompte. NB : listener intégré !
+		JCheckBox[] tab_check = new BoutonCompte[listCompte.length];
 		panCompte.add(new JLabel("Choix de comptes"));
+		// création des CheckBoxes pour les différents comptes
+		// + ajout de ceci à la 
 		for (int i = 0; i<listCompte.length; i++){
-			tab_check[i]=new JCheckBox(listCompte[i].toString());
+			tab_check[i]=new BoutonCompte(listCompte[i]);
 			tab_check[i].setBackground(secondColor);
 			panCompte.add(tab_check[i]);
 		}

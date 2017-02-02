@@ -7,9 +7,13 @@ public enum Placement {
 	FidelityEuro("Fidelity Europe","FidelityEuro",GestionTypes.OPCVM, "FRxx", "FE",0),
 	CarmignacEm("Carmignac Emergent","CarmignacEm",GestionTypes.OPCVM, "FRyy", "CE",1),
 	LyxorETFEuro("Lyxor ETF Euro","LyxorETFEuro",GestionTypes.ETF, "FRzz", "LE",2),
-	BienImmo1("Bien Immobilier 1","BienImmo1",GestionTypes.Immo, "FRaa", "BI",3),
+	BienImmo1("Appart. Parturle","BienImmo1",GestionTypes.Immo, "-", "Paturle",3),
 	Obligations1("Obligations 1", "Obligations1", GestionTypes.Obligations, "FRbb", "O1",4),
-	LyxorETFDJ("Lyxor ETF DJ Indust. Av.","LyxorETFDJ",GestionTypes.ETF,"FRcc","02",5);
+	LyxorETFDJ("Lyxor ETF DJ Indust. Av.","LyxorETFDJ",GestionTypes.ETF,"FRcc","02",5),
+	Gallica("Gallica","Gallica",GestionTypes.OPCVM,"FR0010031195","Gallica",6),
+	LBPAMActionsEuro("BP Actions Euro","LBPAMActionsEuro",GestionTypes.OPCVM,"FR0000286320","LBPAMActionsEuro",7),
+	LBPAMActionsMonde("BP Actions Monde","LBPAMActionsMonde",GestionTypes.OPCVM,"FR0000288078","LBPAMActionsMonde",8),
+	LyxorMTS35("Lyxor ETF Euro 3-5 ANS IG","LyxorMTS35",GestionTypes.Obligations,"FR0010037234","LyxorMTS35",9);
 	
 	private String name;
 	private String mnemo;

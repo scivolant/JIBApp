@@ -24,28 +24,31 @@ import gestionSuivi.placement.Placement;
  * 
  */
 
-public class TableauTransaction extends JPanel{
+public class TableauOrdres extends JPanel{
 	private Placement place;
 	private JTable tableau;
 	private JButton nouvelleLigne = new JButton("Ajouter une ligne");
 	private JButton sauvegarde = new JButton("Svg/MàJ");
-	private PanSynthese panSynthese; 
 	
-	public TableauTransaction(Placement place){
+	public TableauOrdres(Placement place){
 		super(new BorderLayout());
 		this.place = place;
 		
 		DataInterf dataInterf = DataIni.getInstance();
 		
 		// Chercher la sauvegarde pour le placement concerné :
-		Object[][] data = dataInterf.lireData(place);
+		Object[][] data = dataInterf.lireDataOrdres(place);
 		
 	    //Les titres des colonnes
-	    String  title[] = {"Date", "Compte", "Cours", "Add (UC)", "Dim (UC)", "Add (€)", "Dim (€)", "Suppr."};
+	    String  title[] = {"Compte", "Cours cible", "Achat (UC)", "Vente (UC)", "Add (€)", "Dim (€)", "Notes", "Suppr."};
 	    
 	    JComboBox combo = new JComboBox(Compte.getNames());
 	    
+	    // initialise le modèle 
+	    // puis lui in qu'il n'est pas de type "Transactions" (seconde ligne).
 	    ZModel model = new ZModel(data, title);
+	    model.setIsTransactions(false);
+	    
 	    this.tableau = new JTable(model);
 	    this.tableau.setRowHeight(30);
 	    
@@ -53,46 +56,41 @@ public class TableauTransaction extends JPanel{
 	    
 	    this.tableau.getColumn("Compte").setCellEditor(new DefaultCellEditor(combo));
 	    
-	    this.tableau.getColumn("Cours").setCellRenderer(new ComputationRenderer());
-	    
 	    // normalise l'affichage en Euros
-	    this.tableau.getColumn("Add (€)").setCellRenderer(new NormEURRenderer());
-	    this.tableau.getColumn("Dim (€)").setCellRenderer(new NormEURRenderer());
+	    this.tableau.getColumn("Cours cible").setCellRenderer(new NormEURRenderer());
+	    	    
+	    this.tableau.getColumn("Achat (UC)").setCellRenderer(new NormUCRenderer());
+	    this.tableau.getColumn("Vente (UC)").setCellRenderer(new NormUCRenderer());
 	    
-	    // normalise l'affichage en UC
-	    this.tableau.getColumn("Add (UC)").setCellRenderer(new NormUCRenderer());
-	    this.tableau.getColumn("Dim (UC)").setCellRenderer(new NormUCRenderer());
+	    // Dans ce tableau, c'est le total en EUR qui est calculé (sur la base du cours estimé
+	    this.tableau.getColumn("Add (€)").setCellRenderer(new ComputationEURRenderer());
+	    this.tableau.getColumn("Dim (€)").setCellRenderer(new ComputationEURRenderer());
 	    
 	    this.tableau.getColumn("Suppr.").setCellRenderer(new ButtonRenderer());
 	    this.tableau.getColumn("Suppr.").setCellEditor(new ButtonEditor(new JCheckBox()));
 	    
 		class AddListener implements ActionListener{
 			public void actionPerformed(ActionEvent event){		
-				((ZModel)tableau.getModel()).addRow(dataInterf.defaultLine());
+				((ZModel)tableau.getModel()).addRow(dataInterf.defaultLineOrdres());
 			}
 		}
 		
-		class SvgListener implements ActionListener{
+		class SvgListenerOrdres implements ActionListener{
 			ZModel model;
 			
-			public SvgListener(ZModel model){
+			public SvgListenerOrdres(ZModel model){
 				super();
 				this.model=model;
 			}
 			
 			public void actionPerformed(ActionEvent event){
 				// Sauvegarde des données modifiées
-				dataInterf.svgData(place, model);
-				
-				// mise à jour du panneau synthèse (sur des données à jour)
-				panSynthese.setDonnes(String.format("%.2f", dataInterf.prixMoyen(place)),
-	    							  String.format("%.4f", dataInterf.totalUC(place)),
-	    							  String.format("%.2f", dataInterf.totalEUR(place)));
+				dataInterf.svgDataOrdres(place, model);
 			}
 		}
 	    
 	    nouvelleLigne.addActionListener(new AddListener());
-	    sauvegarde.addActionListener(new SvgListener(model));
+	    sauvegarde.addActionListener(new SvgListenerOrdres(model));
 	    
 	    GridLayout gl1 = new GridLayout(1,3);
 	    gl1.setHgap(5);
@@ -100,16 +98,8 @@ public class TableauTransaction extends JPanel{
 	    pan1.add(nouvelleLigne);
 	    pan1.add(sauvegarde);
 	    
-	    panSynthese = new PanSynthese(String.format("%.2f", dataInterf.prixMoyen(place)),
-	    							  String.format("%.4f", dataInterf.totalUC(place)),
-	    							  String.format("%.2f", dataInterf.totalEUR(place)));
-	    
-	    JPanel pan = new JPanel(new GridLayout(2,1));
-	    pan.add(panSynthese);
-	    pan.add(pan1);
-	    
 	    this.add(new JScrollPane(tableau), BorderLayout.CENTER);
-	    this.add(pan, BorderLayout.SOUTH);
+	    this.add(pan1, BorderLayout.SOUTH);
 	}
 	
 	public JTable getTableau(){

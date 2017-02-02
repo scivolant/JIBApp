@@ -6,10 +6,14 @@ public class ZModel extends AbstractTableModel {
 	  private Object[][] data;
 	  private String[] title;
 	  
+	  // Pour coder s'il s'agit du modèle d'un tableau de transactions ou d'ordres.
+	  private Boolean isTransactions;
+	  
 	  public ZModel(Object[][] data, String[] title){
 		  super();
 		  this.data=data;
 		  this.title=title;
+		  this.isTransactions=true;
 	  }
 	  
 	  public String getColumnName(int col) {
@@ -31,6 +35,10 @@ public class ZModel extends AbstractTableModel {
 	  public void setValueAt(Object value, int row, int col){
 		  if (!this.getColumnName(col).equals("Suppr."))
 		  this.data[row][col]=value;
+	  }
+	  
+	  public void setIsTransactions(boolean isTransactions){
+		  this.isTransactions = isTransactions;
 	  }
 	  
 	  public Class getColumnClass(int col){
@@ -75,9 +83,16 @@ public class ZModel extends AbstractTableModel {
 	  }
 	  
 	  public boolean isCellEditable(int row, int col){
-		  if (!this.getColumnName(col).equals("Prix unit.") )
-			  return true; 
-		  else return false;
+		  if (this.isTransactions) {
+			  if (!this.getColumnName(col).equals("Cours") )
+				  return true; 
+			  else return false;
+		  }
+		  else {
+			  if ((this.getColumnName(col).equals("Add (€)")) || (this.getColumnName(col).equals("Dim (€)")))
+				  return false; 
+			  else return true;
+		  }
 	  }
 	  
 	  public Object[][] getData(){
