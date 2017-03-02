@@ -1,34 +1,47 @@
-package gestionSuivi;
+package gestion;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JCheckBox;
 
-import gestionSuivi.compte.Compte;
-import gestionSuivi.data.DataIni;
-import gestionSuivi.data.DataInterf;
+import gestion.compta.Compte;
+import gestion.data.DataCenter;
+import gestion.observer.Observable;
+import gestion.observer.Observer;
 
 /*
  * Création des boutons pour sélection des comptes et des alertes associées
  * 
- * Attention ! Pour être raccord avec DataIni, il faut initialiser les boutons à "rien n'est sélectionné"...
  */
 
 public class BoutonCompte extends JCheckBox{
 	
-	class CompteListener implements ActionListener{
-		private Compte compte;
+	class CompteListener implements ActionListener, Observable<Compte>{
+		Compte compte;
+		private ArrayList<Observer> listeObserver = new ArrayList<Observer>();
 		
 		public CompteListener(Compte compte){
 			super();
 			this.compte = compte;
+			this.addObserver(DataCenter.getInstance());
 		}
 		
 		public void actionPerformed(ActionEvent e){
-			DataInterf dataInterf = DataIni.getInstance();
-			dataInterf.updateCompte(compte, ((JCheckBox)e.getSource()).isSelected());
+			this.updateObs(compte, ((JCheckBox)e.getSource()).isSelected());
 		}
+		
+		public void addObserver(Observer<Compte> obs){
+			listeObserver.add(obs);
+		}
+		
+		public void updateObs(Compte compte, boolean bool){
+			for (Observer<Compte> obs: listeObserver){
+				obs.updateObs(compte, bool);
+			}
+		}
+		
 	}
 	
 	public BoutonCompte(Compte compte){
