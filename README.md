@@ -1,6 +1,6 @@
-##GestionSuivi
+## GestionSuivi
 
-###A program to follow and manage investments using a SQL database.
+### A program to follow and manage investments using a SQL database.
 
 Main class: GestionSuivi.java, the program then runs in a window (not output, just modification of the database).
 
