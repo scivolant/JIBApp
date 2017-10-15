@@ -7,6 +7,8 @@ import java.util.Locale;
 
 import javax.swing.JOptionPane;
 
+import gestion.data.dao.DaoException;
+
 public class FT_ordinaire extends Transfer {
 	
 	// Une seule instance attendue (mais un singleton paraissait un peu trop complexe)
@@ -21,18 +23,20 @@ public class FT_ordinaire extends Transfer {
 	}
 
 	@Override
-	public Date getDate(String text) throws QuotationException{
+	public Date getDate(String text) throws DaoException{
 		Date date = new Date(0);
 		
         // extraction de la date :
-        int p = text.indexOf(" of market ");
-        int from = text.indexOf("close ",p);
+        int p = text.indexOf("--</span></li></ul><div class=\"mod-disclaimer\">");
+        String fromS = "as of ";
+        int delta = fromS.length();
+        int from = text.indexOf(fromS,p);
         int to = text.indexOf(".",from);
         
-        System.out.println("FT_ordinaire.getDate -- from = "+from+", to = "+to);
+        System.out.println("FT_ordinaire.getDate -- from = "+from+delta+", to = "+to);
 
-        // ajout de 6, correspond à la taille de "as of " dans "from"
-        String dateString= text.substring(from + 6, to);
+        // ajout de delta, correspond taille de fromS
+        String dateString= text.substring(from + delta, to);
         
         System.out.println("FT_ordinaire.getDate -- dateString ="+dateString);
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy",Locale.US);
@@ -42,27 +46,29 @@ public class FT_ordinaire extends Transfer {
 			e.printStackTrace();
 			JOptionPane jop = new JOptionPane();
 			jop.showMessageDialog(null, "Date pas au format MMM dd yyyy ? "+e.getMessage(),"ERREUR ds FT_ordinaire.getDate",JOptionPane.ERROR_MESSAGE);
-			throw new QuotationException();
+			throw new DaoException();
 		} catch (Exception e){
 			e.printStackTrace();
 			JOptionPane jop = new JOptionPane();
 			jop.showMessageDialog(null, e.getMessage(),"ERREUR ds FT_ordinaire.getDate",JOptionPane.ERROR_MESSAGE);
-			throw new QuotationException();
+			throw new DaoException();
 		}
         return date;
 	}
 
 	@Override
-	public float getPrice(String text) throws QuotationException{
+	public float getPrice(String text) throws DaoException{
 		float price=0.f;
 		
-        int p = text.indexOf("class=\"text first\"");
-        int from = text.indexOf(">",p);
-        int to = text.indexOf("</td>",from);
+        int p = text.indexOf("Price (EUR)");
+        String fromS = "</span><span class=\"mod-ui-data-list__value\">";
+        int delta = fromS.length();
+        int from = text.indexOf(fromS,p);
+        int to = text.indexOf("</span>",from + delta);
         
-        System.out.println("FT_ordinaire.getPrice -- from = "+from+", to = "+to);
-        // ajout de 1, correspond à la taille de ">" dans "from"
-        String priceString= text.substring(from + 1, to);
+        System.out.println("FT_ordinaire.getPrice -- from = "+from+delta+", to = "+to);
+        // ajout de delta, correspond à la taille de fromS
+        String priceString= text.substring(from + delta, to);
         
         System.out.println("FT_ordinaire.getPrice -- priceString ="+priceString);
 		NumberFormat format = NumberFormat.getInstance(Locale.US);
@@ -73,12 +79,12 @@ public class FT_ordinaire extends Transfer {
 			e.printStackTrace();
 			JOptionPane jop = new JOptionPane();
 			jop.showMessageDialog(null, "priceString de la mauvaise forme ? "+e.getMessage(),"ERREUR ds FT_ordinaire.getPrice",JOptionPane.ERROR_MESSAGE);
-			throw new QuotationException();
+			throw new DaoException();
 		} catch (Exception e){
 			e.printStackTrace();
 			JOptionPane jop = new JOptionPane();
 			jop.showMessageDialog(null, e.getMessage(),"ERREUR ds FT_ordinaire.getPrice",JOptionPane.ERROR_MESSAGE);
-			throw new QuotationException();
+			throw new DaoException();
 		}
         return price;
 	}

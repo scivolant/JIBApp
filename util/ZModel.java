@@ -8,26 +8,25 @@ import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
-import gestion.data.DAO;
-import gestion.data.DAOtableau;
+import gestion.data.Dao;
 
 public abstract class ZModel<T> extends AbstractTableModel {
 	  protected LinkedList<T> data;
 	  protected Class[] listeClass;
 	  protected String[] title;
-	  protected DAO<T> daoTableau;
+	  protected Dao<T> daoT;
 	  
 	  // Model général qui se spécialise en TransModel et OrdreModel. Comporte :
 	  // _ fonctions d'ajout et de suppression de données
 	  // _ fonctions de conversion de String en Date et en Float
 	  // _ fonction de MàJ des données (getData, utilise les valeurs courantes de comptes et placement)
 	  
-	  public ZModel(Class[] listeClass, String[]  title, DAO<T> daoTableau){
+	  public ZModel(Class[] listeClass, String[]  title, Dao<T> daoT){
 		  super();
-		  this.data=daoTableau.getData();
+		  this.data=daoT.getData();
 		  this.listeClass=listeClass;
 		  this.title=title;
-		  this.daoTableau=daoTableau;
+		  this.daoT=daoT;
 	  }
 	  
 	  public String getColumnName(int col) {
@@ -47,7 +46,7 @@ public abstract class ZModel<T> extends AbstractTableModel {
 	  }
 	  
 	  public void removeRow(int position){
-		  boolean test = daoTableau.delete(data.get(position));
+		  boolean test = daoT.delete(data.get(position));
 		  if (test){
 			  data.remove(position);
 		  } else {
@@ -61,25 +60,25 @@ public abstract class ZModel<T> extends AbstractTableModel {
 	  
 	  // prend un élément non initialisé
 	  public void addRow(T obj){
-		  boolean test = daoTableau.create(obj);
+		  boolean test = daoT.create(obj);
 		  if (test){
-			  	data.add(obj);
+			  	data.addFirst(obj);
+			  	// Pour avertir le tableau que les données ont changé.
+				this.fireTableDataChanged();
 		  } else {
 				JOptionPane jop = new JOptionPane();
 				jop.showMessageDialog(null, "addRow dans ZModel a échoué","ERREUR",JOptionPane.ERROR_MESSAGE);
 		  }
-		  // Pour avertir le tableau que les données ont changé.
-		  this.fireTableDataChanged();
 	  }
 	  
 	  // créer un nouvel élément
 	  public void addRow(){
-		  T obj = daoTableau.newElement();
+		  T obj = daoT.newElement();
 		  if (obj == null){
 				JOptionPane jop = new JOptionPane();
 				jop.showMessageDialog(null, "addRow dans ZModel a échoué","ERREUR",JOptionPane.ERROR_MESSAGE);
 		  } else {
-			  	data.add(obj);
+			  	data.addFirst(obj);
 		  } 
 		  // Pour avertir le tableau que les données ont changé.
 		  this.fireTableDataChanged();
@@ -95,13 +94,14 @@ public abstract class ZModel<T> extends AbstractTableModel {
 		  return this.data;
 	  }
 	  
-	  public DAO<T> getDAOtableau(){
-		  return this.daoTableau;
+	  public Dao<T> getDaoT(){
+		  return this.daoT;
 	  }
 	  
 	  // mise à jour des données
+	  // à partir de la base de données
 	  public void updateData(){
-		  this.data = daoTableau.getData();
+		  this.data = daoT.getData();
 		  this.fireTableDataChanged();
 	  }
 	  

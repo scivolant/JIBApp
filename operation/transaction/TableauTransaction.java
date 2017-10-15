@@ -1,24 +1,26 @@
 package gestion.operation.transaction;
 
 import java.awt.BorderLayout;
-import java.util.LinkedList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 
 import gestion.accueil.ButtonRenderer;
 import gestion.compta.Compte;
-import gestion.compta.Placement;
 import gestion.compta.Transaction;
 import gestion.data.DataCenter;
-import gestion.operation.TableauCommun;
 import gestion.util.ButtonDeleteEditor;
 import gestion.util.DateEditor;
 import gestion.util.FloatEditor;
 import gestion.util.NormEURRenderer;
 import gestion.util.NormUCRenderer;
+import gestion.util.TableauCommun;
 
 /* 
  * Classe fille de TableauCommun, spécialisée à Transaction (avec un panneau synthèse)
@@ -26,7 +28,8 @@ import gestion.util.NormUCRenderer;
  */
 
 public class TableauTransaction extends TableauCommun<Transaction>{
-	private PanSynthese panSynthese; 
+	private PanSynthese panSynthese;
+	private JComboBox<Compte> combo;
 	
 	public TableauTransaction(){
 		super(new TransModel());
@@ -36,9 +39,9 @@ public class TableauTransaction extends TableauCommun<Transaction>{
 	    //Pour mémoire, les titres des colonnes (vrai title dans "TransModel")
 	    //String  title[] = {"Date", "Compte", "Cours", "Add (UC)", "Dim (UC)", "Add (€)", "Dim (€)", "Suppr."};
 	    
-		LinkedList<Compte> listeCompte = DataCenter.getCompteDAO().getData();
 		// Combo box avec les comptes dispos
-	    JComboBox<Compte> combo = new JComboBox<Compte>(listeCompte.toArray(new Compte[listeCompte.size()]));
+		Compte[] listeCompte = DataCenter.getComptesCourants();
+	    combo = new JComboBox<Compte>(listeCompte);
 
 	    	    
 	    this.tableau.getColumn("Compte").setCellEditor(new DefaultCellEditor(combo));
@@ -75,30 +78,39 @@ public class TableauTransaction extends TableauCommun<Transaction>{
 	}
 	
 	public void updateTableau(){
+		//System.out.println("TableauTransaction.updateTableau() appelé");
 		DataCenter dataCenter = DataCenter.getInstance();
 		
 		// Mise à jour du panneau synthèse
 		this.panSynthese.setData(dataCenter.getDataPanSynthese());
 		
 		// Mise à jour des données du tableau
-		this.getModel().updateData();
+		// NB : à partir de la base de données
+		((TransModel)tableau.getModel()).updateData();
 	}
 	
 	public void svgMaJTableau(){
 		// Sauvegarde des données modifiées du tableau
 		int i = 0;
+		TransModel model = (TransModel)tableau.getModel();
 		for (Transaction obj : model.getData()){
-			if (model.getDAOtableau().update(obj)){
-				i++;						
+			if (model.getDaoT().update(obj)){
+				i++;		
 			} else {};
 		};
 		System.out.println("TableauTransaction.svgMaJTableau : Svg de "+i+" ligne(s).");
 		model.updateData();
+
 		
 		// Mise à jour du panneau synthèse
 		DataCenter dataCenter = DataCenter.getInstance();
 		this.panSynthese.setData(dataCenter.getDataPanSynthese());
 	}
 	
+	public void updateCombo(){
+		Compte[] comptes = DataCenter.getComptesCourants();
+		ComboBoxModel<Compte> model = new DefaultComboBoxModel<Compte>(comptes);
+		this.combo.setModel(model);
+	}
 
 }

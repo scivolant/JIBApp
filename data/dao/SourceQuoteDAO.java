@@ -8,14 +8,14 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import gestion.compta.GestionType;
+import gestion.compta.Student;
 import gestion.compta.Placement;
 import gestion.compta.SourceQuote;
-import gestion.data.DAO;
+import gestion.data.Dao;
 import gestion.data.DataCenter;
 import gestion.data.quotation.Transfer;
 
-public class SourceQuoteDAO extends DAO<SourceQuote> {
+public class SourceQuoteDAO extends Dao<SourceQuote> {
 	
 	public SourceQuoteDAO(DataCenter instance){
 		super(instance);
@@ -98,13 +98,17 @@ public class SourceQuoteDAO extends DAO<SourceQuote> {
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			state.setInt(1, index);
 			ResultSet res = state.executeQuery();
-			res.first();
-			SourceQuote source = new SourceQuote(
-					res.getString("name"),
-					res.getString("url"),
-					Transfer.values()[res.getInt("id_transf")-1]
-					);
-			source.setIdSource(index);
+			SourceQuote source;
+			if (res.next()){
+				source = new SourceQuote(
+						res.getString("name"),
+						res.getString("url"),
+						Transfer.values()[res.getInt("id_transf")-1]
+						);
+				source.setIdSource(index);
+			} else {
+				source = null;
+			}
 			res.close();
 			state.close();
 			return source;

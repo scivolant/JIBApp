@@ -15,8 +15,9 @@ import javax.swing.JTable;
 
 import gestion.compta.Placement;
 import gestion.data.DataCenter;
+import gestion.util.FenetreCommun;
 
-public class FenetreAccueil extends JPanel {
+public class FenetreAccueil extends FenetreCommun {
 	protected JTable tableauRepartition;
 	protected JLabel achats;
 	protected JLabel ventes;
@@ -60,8 +61,9 @@ public class FenetreAccueil extends JPanel {
 			public void actionPerformed(ActionEvent event){
 				// mise à jour du panneau synthèse (sur des données à jour)
 				((ZModel2) tableauRepartition.getModel()).setDataVector(dataSql.accueilData(),title);
+				
 				// mise à jour des ordres d'achats et de ventes
-				updateOrdres();
+				updateFenetre();
 			}
 		}
 	    maJ.addActionListener(new MaJListener());
@@ -77,6 +79,9 @@ public class FenetreAccueil extends JPanel {
 					dataSql.dernierCoursMaJ(place);
 				}
 				System.out.println("DCoursListener : mise à jour des cours terminée !");
+				
+				// MàJ des ordres
+				updateFenetre();		
 			}
 		}
 	    derniersCours.addActionListener(new DCoursListener());
@@ -108,8 +113,12 @@ public class FenetreAccueil extends JPanel {
 		this.setVisible(true);
 	}
 	
-	public void updateOrdres(){
+	@Override
+	public void updateFenetre(){
+		DataCenter dataCenter = DataCenter.getInstance();
 		// Mise à jour du nombre d'ordres à effectuer
+		dataCenter.achatsAExecuter();
+		dataCenter.ventesAExecuter();
 		this.achats.setText(String.valueOf(DataCenter.getNbrAchatsAExec()));
 		this.ventes.setText(String.valueOf(DataCenter.getNbrVentesAExec()));
 	}

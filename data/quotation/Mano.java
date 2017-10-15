@@ -7,6 +7,8 @@ import java.util.Locale;
 
 import javax.swing.JOptionPane;
 
+import gestion.data.dao.DaoException;
+
 public class Mano extends Transfer {
 	
 	// Une seule instance attendue (mais un singleton paraissait être de la sur-qualité)
@@ -21,12 +23,12 @@ public class Mano extends Transfer {
 	}
 
 	@Override
-	public Date getDate(String text) throws QuotationException{
-		throw new QuotationException();
+	public Date getDate(String text) throws DaoException{
+		throw new DaoException();
 	}
 
 	@Override
-	public float getPrice(String text) throws QuotationException{
-		throw new QuotationException();
+	public float getPrice(String text) throws DaoException{
+		throw new DaoException();
 	}
 }

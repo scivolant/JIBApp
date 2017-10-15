@@ -68,6 +68,7 @@ public class TransModel extends ZModel<Transaction> {
 			  		break;
 			  	default:
 			  }
+			  fireTableRowsUpdated(row,row);
 		  }
 	  }
 	  

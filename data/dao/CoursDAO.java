@@ -11,10 +11,10 @@ import javax.swing.JOptionPane;
 
 import gestion.compta.Cours;
 import gestion.compta.Placement;
-import gestion.data.DAO;
+import gestion.data.Dao;
 import gestion.data.DataCenter;
 
-public class CoursDAO extends DAO<Cours> {
+public class CoursDAO extends Dao<Cours> {
 	
 	public CoursDAO(DataCenter dataCenter){
 		super(dataCenter);
@@ -35,7 +35,7 @@ public class CoursDAO extends DAO<Cours> {
 			ResultSet genKey = state.getGeneratedKeys();
 			if (genKey.next()){
 				obj.setIdCours(genKey.getInt(1));
-				System.out.println("CoursDAO.create -- clée :"+genKey.getInt(1));
+				System.out.println("CoursDAO.create -- clée : "+genKey.getInt(1));
 			};
 			state.close();
 			return (nb_rows !=0);
@@ -80,7 +80,7 @@ public class CoursDAO extends DAO<Cours> {
 			PreparedStatement state = conn.prepareStatement(query);
 			state.setInt(1, obj.getIdCours());
 			int nb_rows = state.executeUpdate();
-			System.out.println("Suppression de "+nb_rows+" ligne(s)");
+			System.out.println("CoursDAO.delete : suppression de "+nb_rows+" ligne(s)");
 			state.close();
 			return true;
 		} catch (SQLException e){
@@ -140,7 +140,7 @@ public class CoursDAO extends DAO<Cours> {
 		try{
 			String query=" SELECT id_cours, id_placement, cours_date, coursunit "
 					+ " FROM cours "
-					+ " WHERE id_placement = ? ORDER BY cours_date ";
+					+ " WHERE id_placement = ? ORDER BY cours_date DESC ; ";
 			PreparedStatement state = conn.prepareStatement(query);
 			state.setInt(1, dataCenter.getPlaceCourant().getIndex());
 			ResultSet res = state.executeQuery();
@@ -183,8 +183,12 @@ public class CoursDAO extends DAO<Cours> {
 			state.setInt(1, place.getIndex());
 			ResultSet res = state.executeQuery();
 			
-			res.next();
-			dernierCours = res.getFloat("coursunit");
+			if (res.next()){
+				dernierCours = res.getFloat("coursunit");
+			} else {
+				System.err.println("CoursDAO.dernierCours("+place.getName()+") -- pas de dernier cours !");
+				dernierCours = 0f;
+			}
 			state.close();
 			return dernierCours;
 		} catch (SQLException e){

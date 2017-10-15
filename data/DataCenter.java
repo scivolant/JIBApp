@@ -1,7 +1,6 @@
 package gestion.data;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,59 +11,70 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
+import org.postgresql.util.PSQLException;
+
 import gestion.compta.Compte;
 import gestion.compta.Cours;
-import gestion.compta.GestionType;
 import gestion.compta.Placement;
-import gestion.compta.SourceQuote;
 import gestion.data.dao.CompteDAO;
 import gestion.data.dao.CoursDAO;
+import gestion.data.dao.DaoException;
 import gestion.data.dao.GestionTypesDAO;
 import gestion.data.dao.OrdreDAO;
 import gestion.data.dao.PlacementDAO;
 import gestion.data.dao.SourceQuoteDAO;
 import gestion.data.dao.TransacDAO;
-import gestion.data.quotation.QuotationException;
-import gestion.observer.Observer;
-import gestion.util.ZModel;
 
 // Classe qui centralise les informations (dont placement courant et comptes sélectionnés)
 // Cette classe sert de "factory" pour les xxxDAO
 
 
-public class DataCenter implements Observer<Compte>{
+public class DataCenter{
    	private static Connection conn;
    	
    	// Placement et comptes sélectionnés
    	protected static Placement placeCourant;
-   	protected static Set<Compte> comptesCourants;
+   	protected static Set<Integer> idComptesCourants;
    	
    	// Nbr d'ordres à exécuter :
    	protected static int nbrAchatsAExec = 0;
    	protected static int nbrVentesAExec = 0;
    	
    	// données pour la connexion
-    private String url = "jdbc:postgresql://localhost:5432/postgres";
-    private String user = "postgres";
-    private String passwd = "mdpDB";
+    //private String url = "jdbc:postgresql://localhost:5432/postgres";
+    private String url ;
+    private String user ;
+    private String passwd ;
 	
 	// implementation singleton par "initialisation immédiate".
 	private static DataCenter instance = new DataCenter();
 	
+	// ActionListener sur BoutonCompte
+	//private BoutonCompteListener boutonCompteListener = new DataCenter.BoutonCompteListener(); 
+	
 	private DataCenter(){
-		System.out.println("Appel du constructeur de DataSQL");
+		DialogueConnection dialogueConn = new DialogueConnection();
+		String[] infoConn = dialogueConn.showDialogueConnection();
+		// Pour mémoire : infoConn = user, passwd, host, dataBase
 		try {
 	        Class.forName("org.postgresql.Driver");
+	        url = "jdbc:postgresql://"+infoConn[2]+"/"+infoConn[3];
+	        user = infoConn[0];
+	        passwd = infoConn[1];
 	        conn = DriverManager.getConnection(url, user, passwd);
 	        // commits automatiques ou pas
 	        conn.setAutoCommit(true);
 		} catch (ClassNotFoundException e) {
 	        e.printStackTrace();
+		} catch (PSQLException e){
+			JOptionPane jop = new JOptionPane();
+			jop.showMessageDialog(null , "Mot de passe erroné ?", "DataCenter -- PSQLException", JOptionPane.ERROR_MESSAGE );
+			e.printStackTrace();
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
 		// Initialisation des comptes sélectionnés
-		this.comptesCourants = new HashSet<Compte>();
+		this.idComptesCourants = new HashSet<Integer>();
 	}
 	
 	public static DataCenter getInstance(){
@@ -105,7 +115,7 @@ public class DataCenter implements Observer<Compte>{
 		try {
 			Cours cours = place.getSource().getCours(place);
 			this.getCoursDAO().create(cours);
-		} catch (QuotationException e){
+		} catch (DaoException e){
 			System.err.println("Erreur dans DataCenter.dernierCoursMaJ()");
 			System.err.println("dernierCoursMaJ() : pas de cours créé pour "+place.getName());
 		}
@@ -117,7 +127,7 @@ public class DataCenter implements Observer<Compte>{
 		try {
 			Cours cours = place.getSource().getCours(place);
 			this.getCoursDAO().create(cours);
-		} catch (QuotationException e){
+		} catch (DaoException e){
 			System.err.println("Erreur dans DataCenter.dernierCoursMaJ()");
 			System.err.println("dernierCoursMaJ() : pas de cours créé pour "+place.getName());
 		}
@@ -148,7 +158,7 @@ public class DataCenter implements Observer<Compte>{
 	}
 
 	public float[] getDataPanSynthese(){
-		// données pour PanSynthese, dans l'ordre :
+		// données pour PanSynthese (dans TableauTransaction), dans l'ordre :
 		// totalUC (0), totalEUR (1) [total des EUR investis !], dernierCours (2)
 		float[] vectData = {0f,0f,0f};
 		
@@ -157,56 +167,9 @@ public class DataCenter implements Observer<Compte>{
 		} else {
 			vectData[0] = this.getTransacDAO().totalUC(placeCourant);
 			vectData[1] = this.getTransacDAO().totalEUR(placeCourant);
-			vectData[2] = this.getCoursDAO().dernierCours(placeCourant);		
+			vectData[2] = this.getCoursDAO().dernierCours(placeCourant);
 			return vectData;
 		}
-	}
-
-	public void svgDataOrdres(Placement place, ZModel model) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	public Object[][] lireData(Placement place) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public Object[][] lireDataOrdres(Placement place) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public Object[][] fetchData(Placement place) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public Object[][] fetchDataOrdres(Placement place) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public float totalUC(Placement place) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	public float totalEUR(Placement place) {
-		// TODO Auto-generated method stub
-		return 36;
-	}
-
-
-	public float prixMoyen(Placement place) {
-		// TODO Auto-generated method stub
-		return 25;
 	}
 
 	// données pour l'accueil :
@@ -281,23 +244,26 @@ public class DataCenter implements Observer<Compte>{
 		return null;
 	}
 
-	public void updateObs(Compte compte, boolean isChecked) {
-		// TODO Auto-generated method stub
+	
+	public void updateComptesCourants(Compte compte, Boolean isChecked){
 		if (isChecked){
-			comptesCourants.add(compte);
+			idComptesCourants.add(compte.getIdCompte());
 		} else {
-			comptesCourants.remove(compte);
+			idComptesCourants.remove(compte.getIdCompte());
 		}
-		System.out.println("=== Var. comptesCourant ===");
-		for (Compte cpt : comptesCourants){
-			System.out.println(cpt);
+		// liste des comptes courants
+		System.out.println("=== Var. comptesCourant (id_compte) ===");
+		String output = "[";
+		for (int cpt : idComptesCourants){
+			output =output+String.valueOf(cpt)+",";
 		}
+		System.out.println(output+"]");
 	}
 	
 	public void updatePlacement(Placement place){
 		this.placeCourant = place;
 		System.out.println("=== Var. placeCourant ===");
-		System.out.println(placeCourant);
+		System.out.println("Var. placeCourant = "+placeCourant);
 	}
 	
 	public Connection getConn(){
@@ -308,8 +274,14 @@ public class DataCenter implements Observer<Compte>{
 		return placeCourant;
 	}
 	
-	public Set<Compte> getComptesCourants(){
-		return this.comptesCourants;
+	public static Compte[] getComptesCourants(){
+		Compte[] output = new Compte[idComptesCourants.size()];
+		int i = 0;
+		for (int cpt : idComptesCourants){
+			output[i] = getCompteDAO().find(cpt);
+			i++;
+		}
+		return output;
 	}
 
 	// trouve les ordres d'achats à effectuer, actualise nbrAchatsAExec 
@@ -431,5 +403,21 @@ public class DataCenter implements Observer<Compte>{
 				repartition = 0.5f;				
 		}
 		return repartition;
+	}
+	
+	// comptesCourants comme vecteurs d'entiers (=id_compte)
+	public Object[] comptesCourantsArray(){
+		int N = idComptesCourants.size();
+		Object[] array = new Object[N];
+		int i = 0;
+		for (int id_compte : idComptesCourants){
+			array[i] = id_compte;
+			i++;
+		}
+		return array;
+	}
+	
+	public void addComptesCourants(Compte compte){
+		this.idComptesCourants.add(compte.getIdCompte());
 	}
 }

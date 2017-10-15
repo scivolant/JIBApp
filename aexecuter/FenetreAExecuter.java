@@ -12,8 +12,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import gestion.data.DataCenter;
+import gestion.util.FenetreCommun;
 
-public class FenetreAExecuter extends JPanel {
+public class FenetreAExecuter extends FenetreCommun {
 
 	public FenetreAExecuter() {
 		super();

@@ -23,10 +23,15 @@ public class PanSynthese extends JPanel {
 	    this.setLayout(gl2);
 	    
 	    // Calculs ini
-	    float prixMoyen = vectFloat[1]/vectFloat[0];
+	    try{
+	    	float prixMoyen = vectFloat[1]/vectFloat[0];
+		    this.prixM = new JLabel(String.format("%.2f",prixMoyen),SwingConstants.RIGHT);
+	    } catch (ArithmeticException e){
+		    this.prixM = new JLabel("NaN",SwingConstants.RIGHT);
+	    }
 	    float valeurLiq = vectFloat[0]*vectFloat[2];
 	    
-	    this.prixM = new JLabel(String.format("%.2f",prixMoyen),SwingConstants.RIGHT);
+
 	    this.totUC = new JLabel(String.format("%.4f",vectFloat[0]),SwingConstants.RIGHT);
 	    this.totEUR = new JLabel(String.format("%.2f",vectFloat[1]),SwingConstants.RIGHT);
 	    this.vL = new JLabel(String.format("%.2f",valeurLiq),SwingConstants.RIGHT);

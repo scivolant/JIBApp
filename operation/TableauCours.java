@@ -17,6 +17,7 @@ import gestion.util.ButtonDeleteEditor;
 import gestion.util.DateEditor;
 import gestion.util.FloatEditor;
 import gestion.util.NormEURRenderer;
+import gestion.util.TableauCommun;
 
 /* 
  * Classe fille de TableauCommun, spécialisée à Transaction (avec un panneau synthèse)
@@ -46,6 +47,7 @@ public class TableauCours extends TableauCommun<Cours>{
 	    // Bouton MàJ des cours
 	    JButton boutonMaJCours = new JButton("Recherche dernier cours (en ligne)");
 	    boutonMaJCours.addActionListener(new ActionListener(){
+	    	CoursModel model = (CoursModel)tableau.getModel();
 	    	public void actionPerformed(ActionEvent event){
 	    		// appuyer sur le bouton met à jour le placement courant
 	    		dataSql.dernierCoursMaJ();

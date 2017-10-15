@@ -4,7 +4,7 @@
 
 Main class: GestionSuivi.java, the program then runs in a window (not output, just modification of the database).
 
-It uses a PostgreSQL database to store data (use baseDeDonnees.sql and InitialisationBdD.sql to create the database). 
+It uses a PostgreSQL database to store data (use baseDeDonnees.sql and InitialisationBdD.sql to create the database).
 
 Packages:
 * "accueil" - default/initial panel
@@ -15,3 +15,5 @@ Packages:
 * "observer" for an observer pattern
 * "operation" - operation panel, where buying and selling investments are recorded
 * "util" - classes used in several different panels.
+
+The git repository contains only the source codes, so the best option to edit it in Eclipse is to clone the repository in .../JIBapp/src/gestion (to avoid any problem with packages...).

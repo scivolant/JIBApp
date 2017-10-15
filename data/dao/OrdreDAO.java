@@ -1,22 +1,21 @@
 package gestion.data.dao;
 
-import java.sql.Connection;
+import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
-import java.util.Set;
 
 import javax.swing.JOptionPane;
 
 import gestion.compta.Compte;
 import gestion.compta.Ordre;
 import gestion.compta.Placement;
-import gestion.data.DAOtableau;
+import gestion.data.Dao;
 import gestion.data.DataCenter;
 
-public class OrdreDAO extends DAOtableau<Ordre> {
+public class OrdreDAO extends Dao<Ordre> {
 	
 	public OrdreDAO(DataCenter instance){
 		super(instance);
@@ -35,7 +34,7 @@ public class OrdreDAO extends DAOtableau<Ordre> {
 			query+="VALUES(?,?,?,?,?,?,?,?)";
 			PreparedStatement state = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			state.setInt(1, obj.getPlace().getIndex());
-			state.setInt(2, obj.getCompte().getIndex());
+			state.setInt(2, obj.getCompte().getIdCompte());
 			state.setFloat(3, obj.getCoursUnit());
 			state.setFloat(4, obj.getAddUC());
 			state.setFloat(5, obj.getDimUC());
@@ -76,7 +75,7 @@ public class OrdreDAO extends DAOtableau<Ordre> {
 					+ " WHERE id_ordre = ?";
 			PreparedStatement state = conn.prepareStatement(query);
 			state.setInt(1, obj.getPlace().getIndex());
-			state.setInt(2, obj.getCompte().getIndex());
+			state.setInt(2, obj.getCompte().getIdCompte());
 			state.setFloat(3, obj.getCoursUnit());
 			state.setFloat(4, obj.getAddUC());
 			state.setFloat(5, obj.getDimUC());
@@ -210,7 +209,7 @@ public class OrdreDAO extends DAOtableau<Ordre> {
 		return ordre;
 	}
 
-	// Attention ! cette méthode est relative à "placeCourant"
+	// Attention ! cette méthode est relative à "placeCourant" et "comptesCourants"
 	// écrire une méthode statique getEverything() pour obtenir (abs.) toutes les trans ?
 	@Override
 	public LinkedList<Ordre> getData() {
@@ -221,9 +220,13 @@ public class OrdreDAO extends DAOtableau<Ordre> {
 		try{
 			String query="SELECT id_ordre, id_compte,coursunit,adduc,dimuc,addeur,dimeur,note"
 					+ " FROM ordres "
-					+ " WHERE id_placement = ? ORDER BY coursunit ";
+					+ " WHERE id_placement = ? "
+					+ " AND id_compte = ANY(?) "
+					+ " ORDER BY coursunit DESC ";
 			PreparedStatement state = conn.prepareStatement(query);
 			state.setInt(1, dataCenter.getPlaceCourant().getIndex());
+			Array array = conn.createArrayOf("INTEGER",this.dataCenter.comptesCourantsArray());
+			state.setArray(2, array);
 			ResultSet res = state.executeQuery();
 			int i = 0;
 			while(res.next()){

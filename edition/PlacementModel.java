@@ -1,7 +1,7 @@
 package gestion.edition;
 
 import gestion.compta.Compte;
-import gestion.compta.GestionType;
+import gestion.compta.Student;
 import gestion.compta.Placement;
 import gestion.compta.SourceQuote;
 import gestion.data.DataCenter;
@@ -11,8 +11,8 @@ public class PlacementModel extends ZModel<Placement> {
 	  
 	  public PlacementModel(){
 			super(
-				new Class[] {String.class, String.class, GestionType.class, String.class, String.class, SourceQuote.class, String.class},
-				new String[] {"Nom", "Menmo", "Type", "ISIN", "Code M‡J", "Source", "Suppr."},
+				new Class[] {String.class, Student.class, String.class, String.class, SourceQuote.class, String.class},
+				new String[] {"Nom", "Type", "ISIN", "Code M‡J", "Source", "Suppr."},
 				DataCenter.getPlacementDAO()
 					);
 	  }
@@ -22,14 +22,12 @@ public class PlacementModel extends ZModel<Placement> {
 		  	case 0:
 		  		return data.get(row).getName();
 		  	case 1:
-		  		return data.get(row).getMnemo();
-		  	case 2:
 		  		return data.get(row).getType();
-		  	case 3:
+		  	case 2:
 		  		return data.get(row).getISIN();
-		  	case 4:
+		  	case 3:
 		  		return data.get(row).getCodeMaJ();
-		  	case 5:
+		  	case 4:
 		  		return data.get(row).getSource();
 		  	default:
 		  		return "-";
@@ -45,22 +43,20 @@ public class PlacementModel extends ZModel<Placement> {
 			  		data.get(row).setName((String)value);
 			  		break;
 			  	case 1:
-			  		data.get(row).setMnemo((String)value);
+			  		data.get(row).setType((Student)value);
 			  		break;
 			  	case 2:
-			  		data.get(row).setType((GestionType)value);
-			  		break;
-			  	case 3:
 			  		data.get(row).setISIN((String)value);
 			  		break;
-			  	case 4:
+			  	case 3:
 			  		data.get(row).setCodeMaJ((String)value);
 			  		break;
-			  	case 5:
+			  	case 4:
 			  		data.get(row).setSource((SourceQuote)value);
 			  		break;
 			  	default:
 			  }
+			  fireTableRowsUpdated(row,row);
 		  }
 	  }
 	  

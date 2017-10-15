@@ -2,7 +2,6 @@ package gestion.operation;
 
 import java.sql.Date;
 
-import gestion.compta.Compte;
 import gestion.compta.Cours;
 import gestion.data.DataCenter;
 import gestion.util.ZModel;
@@ -41,6 +40,7 @@ public class CoursModel extends ZModel<Cours> {
 			  		break;
 			  	default:
 			  }
+			  fireTableRowsUpdated(row,row);
 		  }
 	  }
 	  

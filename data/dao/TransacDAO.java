@@ -1,23 +1,21 @@
 package gestion.data.dao;
 
-import java.sql.Connection;
-import java.sql.Date;
+import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
-import java.util.Set;
 
 import javax.swing.JOptionPane;
 
 import gestion.compta.Compte;
 import gestion.compta.Placement;
 import gestion.compta.Transaction;
-import gestion.data.DAOtableau;
+import gestion.data.Dao;
 import gestion.data.DataCenter;
 
-public class TransacDAO extends DAOtableau<Transaction> {
+public class TransacDAO extends Dao<Transaction> {
 	
 	public TransacDAO(DataCenter instance){
 		super(instance);
@@ -30,7 +28,7 @@ public class TransacDAO extends DAOtableau<Transaction> {
 			query+="VALUES(?,?,?,?,?,?,?,?)";
 			PreparedStatement state = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			state.setInt(1, obj.getPlace().getIndex());
-			state.setInt(2, obj.getCompte().getIndex());
+			state.setInt(2, obj.getCompte().getIdCompte());
 			state.setDate(3, obj.getDate());
 			state.setFloat(4, obj.getCoursUnit());
 			state.setFloat(5, obj.getAddUC());
@@ -70,7 +68,7 @@ public class TransacDAO extends DAOtableau<Transaction> {
 					+ " WHERE id_transac = ?";
 			PreparedStatement state = conn.prepareStatement(query);
 			state.setInt(1, obj.getPlace().getIndex());
-			state.setInt(2, obj.getCompte().getIndex());
+			state.setInt(2, obj.getCompte().getIdCompte());
 			state.setDate(3, obj.getDate());
 			state.setFloat(4, obj.getCoursUnit());
 			state.setFloat(5, obj.getAddUC());
@@ -154,7 +152,7 @@ public class TransacDAO extends DAOtableau<Transaction> {
 		return transac;
 	}
 
-	// Attention ! cette méthode est relative à "placeCourant"
+	// Attention ! cette méthode est relative à "placeCourant" et "comptesCourants"
 	@Override
 	public LinkedList<Transaction> getData() {
 		LinkedList<Transaction> data = new LinkedList<Transaction>();
@@ -164,9 +162,13 @@ public class TransacDAO extends DAOtableau<Transaction> {
 		try{
 			String query="SELECT id_transac, id_compte,transac_date,coursunit,adduc,dimuc,addeur,dimeur"
 					+ " FROM transactions "
-					+ " WHERE id_placement=? ORDER BY transac_date ;";
+					+ " WHERE id_placement=? "
+					+ " AND id_compte = ANY(?) "
+					+ " ORDER BY transac_date DESC ;";
 			PreparedStatement state = conn.prepareStatement(query);
 			state.setInt(1, dataCenter.getPlaceCourant().getIndex());
+			Array array = conn.createArrayOf("INTEGER",this.dataCenter.comptesCourantsArray());
+			state.setArray(2, array);
 			ResultSet res = state.executeQuery();
 			int i = 0;
 			while(res.next()){
@@ -241,12 +243,17 @@ public class TransacDAO extends DAOtableau<Transaction> {
 		}
 	}
 
+	// Renvoie le total des UC de ce placement 
+	// pour les comptesCourants sélectionnés
 	public float totalUC(Placement place){
 		float totalUC = 0f;
 		try{
-			String query="SELECT SUM(adduc - dimuc) FROM transactions WHERE id_placement = ?";
+			String query="SELECT SUM(adduc - dimuc) FROM transactions WHERE id_placement = ? AND id_compte = ANY(?) ";
 			PreparedStatement state = conn.prepareStatement(query);
 			state.setInt(1, place.getIndex());
+			Array array = conn.createArrayOf("INTEGER",this.dataCenter.comptesCourantsArray());
+			state.setArray(2, array);
+			
 			ResultSet res = state.executeQuery();
 			
 			res.next();
@@ -263,12 +270,16 @@ public class TransacDAO extends DAOtableau<Transaction> {
 		}
 	}
 
+	// Renvoie le total des EUR de ce placement 
+	// pour les comptesCourants sélectionnés
 	public float totalEUR(Placement place) {
 		float totalEUR = 0f;
 		try{
-			String query="SELECT SUM(addeur - dimeur) FROM transactions WHERE id_placement = ?";
+			String query="SELECT SUM(addeur - dimeur) FROM transactions WHERE id_placement = ? AND id_compte = ANY(?) ";
 			PreparedStatement state = conn.prepareStatement(query);
 			state.setInt(1, place.getIndex());
+			Array array = conn.createArrayOf("INTEGER",this.dataCenter.comptesCourantsArray());
+			state.setArray(2, array);
 			ResultSet res = state.executeQuery();
 			
 			res.next();

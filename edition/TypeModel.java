@@ -1,10 +1,10 @@
 package gestion.edition;
 
-import gestion.compta.GestionType;
+import gestion.compta.Student;
 import gestion.data.DataCenter;
 import gestion.util.ZModel;
 
-public class TypeModel extends ZModel<GestionType> {
+public class TypeModel extends ZModel<Student> {
 	  
 	  public TypeModel(){
 			super(
@@ -33,6 +33,7 @@ public class TypeModel extends ZModel<GestionType> {
 			  		break;
 			  	default:
 			  }
+			  fireTableRowsUpdated(row,row);
 		  }
 	  }
 	  

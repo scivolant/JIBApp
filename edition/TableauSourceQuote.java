@@ -8,11 +8,11 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 
 import gestion.accueil.ButtonRenderer;
-import gestion.compta.GestionType;
+import gestion.compta.Student;
 import gestion.compta.SourceQuote;
 import gestion.data.quotation.Transfer;
-import gestion.operation.TableauCommun;
 import gestion.util.ButtonDeleteEditor;
+import gestion.util.TableauCommun;
 
 /* 
  * Classe fille de TableauCommun, spécialisée à Ordre (sans panneau synthèse)

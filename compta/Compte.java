@@ -2,17 +2,17 @@ package gestion.compta;
 
 public class Compte {
 	private String name;
-	private int index;
+	private int id_compte;
 	
 	public Compte(String name){
 		this.name = name;
-		this.index = 0;
+		this.id_compte = 0;
 	}
 	
 	// collection de "getters"
 	
-	public int getIndex(){
-		return this.index;
+	public int getIdCompte(){
+		return this.id_compte;
 	}
 
 	public String getName(){
@@ -23,11 +23,12 @@ public class Compte {
 		this.name = name;
 	}
 	
-	// à utiliser avec parcimonie !
-	public void setIndex(int index){
-		this.index = index;
+	// ne devrait apparaître que dans CompteDAO.create...
+	public void setIdCompte(int index){
+		this.id_compte = index;
 	}
 	
+	// utilisé pour définir les combos !
 	public String toString(){
 		return this.getName();
 	}
@@ -39,7 +40,7 @@ public class Compte {
 		Compte[] vectComptes = new Compte[nbComptes];
 		for (int i = 0; i< nbComptes; i++){
 			vectComptes[i]=new Compte(listeNoms[i]);
-			vectComptes[i].setIndex(i+1);
+			vectComptes[i].setIdCompte(i+1);
 		}
 		return vectComptes;
 	}
@@ -52,4 +53,13 @@ public class Compte {
 		}
 		return output;
 	}
+	
+	// Valeur par défaut de type, mis à jour par CompteDAO.create.
+	public static Compte defaultEntry() {
+		Compte compte = new Compte("Compte par défaut");
+		return compte;
+	}
+
 }
+
+

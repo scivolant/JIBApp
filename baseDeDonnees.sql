@@ -22,6 +22,7 @@ create table placements(
 	, id_type integer references types
 	, ISIN text
 	, codeMaJ text
+	, id_source integer
 	);
 
 create table transactions(
@@ -35,7 +36,7 @@ create table transactions(
 	, addEUR real
 	, dimEUR real
     	);
-    	
+
 create table ordres(
 	id_ordre serial primary key
 	, id_placement serial references placements
@@ -45,12 +46,19 @@ create table ordres(
 	, dimUC real
 	, addEUR real
 	, dimEUR real
-	, notes text
+	, note text
     	);
-    	
+
 create table cours(
 	id_cours serial primary key
 	, id_placement serial references placements
-	, jour date
-	, coursUnit money
+	, cours_date date
+	, coursUnit real
+	);
+
+create table sourcequotes(
+	id_source serial primary key
+	, name text
+	, url text
+	, id_transf integer
 	);

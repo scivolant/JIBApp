@@ -26,6 +26,6 @@ INSERT INTO placements(name, mnemo, id_type, ISIN, codeMaJ) VALUES('BP Actions E
 INSERT INTO placements(name, mnemo, id_type, ISIN, codeMaJ) VALUES('BP Actions Monde','LBPAMActionsMonde',2,'FR0000288078','LBPAMActionsMonde');
 INSERT INTO placements(name, mnemo, id_type, ISIN, codeMaJ) VALUES('Lyxor ETF Euro 3-5 ANS IG','LyxorMTS35',3,'FR0010037234','LyxorMTS35');
 
-INSERT INTO transactions(id_placement, id_compte, coursUnit, addUC, dimUC, addEUR, dimEUR) VALUES(1,1,'25,36','5.3','0','134,408','0');
+INSERT INTO transactions(id_placement, id_compte, coursUnit, addUC, dimUC, addEUR, dimEUR) VALUES(1,1,'25.36','5.3','0','134.408','0');
 INSERT INTO transactions(id_placement, id_compte, coursUnit, addUC, dimUC, addEUR, dimEUR) VALUES(1,1,'30','0','3.5','0','105');
 INSERT INTO transactions(id_placement, id_compte, coursUnit, addUC, dimUC, addEUR, dimEUR) VALUES(2,1,'30','3.5','0','105','0');

@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -25,6 +27,7 @@ import gestion.util.ButtonDeleteEditor;
 import gestion.util.FloatEditor;
 import gestion.util.NormEURRenderer;
 import gestion.util.NormUCRenderer;
+import gestion.util.TableauCommun;
 
 /* 
  * Classe fille de TableauCommun, spécialisée à Ordre (sans panneau synthèse)
@@ -32,13 +35,14 @@ import gestion.util.NormUCRenderer;
  */
 
 public class TableauOrdres extends TableauCommun<Ordre>{
+	private JComboBox<Compte> combo;
 	
 	public TableauOrdres(){
 		super(new OrdresModel());
 	    
-		LinkedList<Compte> listeCompte = DataCenter.getCompteDAO().getData();
 		// Combo box avec les comptes dispos
-	    JComboBox<Compte> combo = new JComboBox<Compte>(listeCompte.toArray(new Compte[listeCompte.size()]));
+		Compte[] listeCompte = DataCenter.getComptesCourants();
+	    combo = new JComboBox<Compte>(listeCompte);
 	    
 	    this.tableau.getColumn("Compte").setCellEditor(new DefaultCellEditor(combo));
 	    
@@ -65,5 +69,11 @@ public class TableauOrdres extends TableauCommun<Ordre>{
 	
 	public JTable getTableau(){
 		return this.tableau;
+	}
+	
+	public void updateCombo(){
+		Compte[] comptes = DataCenter.getComptesCourants();
+		ComboBoxModel<Compte> model = new DefaultComboBoxModel<Compte>(comptes);
+		this.combo.setModel(model);
 	}
 }

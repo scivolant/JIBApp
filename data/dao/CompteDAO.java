@@ -3,17 +3,18 @@ package gestion.data.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
 import gestion.compta.Compte;
-import gestion.compta.GestionType;
-import gestion.data.DAO;
+import gestion.compta.Student;
+import gestion.data.Dao;
 import gestion.data.DataCenter;
 
-public class CompteDAO extends DAO<Compte> {
+public class CompteDAO extends Dao<Compte> {
 	
 	public CompteDAO(DataCenter dataCenter){
 		super(dataCenter);
@@ -22,11 +23,20 @@ public class CompteDAO extends DAO<Compte> {
 	public boolean create(Compte obj){
 		try{
 			String query="INSERT INTO comptes(name) VALUES(?)";
-			PreparedStatement state = conn.prepareStatement(query);
+			PreparedStatement state = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			state.setString(1, obj.getName());
 			int nb_rows = state.executeUpdate();
+			
+			// MàJ de id_compte (qui doit être à 0 jusque là)
+			ResultSet genKey = state.getGeneratedKeys();
+			System.out.println("CompteDAO.create, après genKey");
+			if (genKey.next()){
+				
+				obj.setIdCompte(genKey.getInt(1));
+				System.out.println("Dans CompteDAO.create, compte à jour = "+obj.toString());
+			};
 			state.close();
-			return true;
+			return (nb_rows !=0);
 		} catch (SQLException e){
 			JOptionPane jop = new JOptionPane();
 			jop.showMessageDialog(null, e.getMessage(),"ERREUR dans CompteDAO.create !",JOptionPane.ERROR_MESSAGE);
@@ -38,11 +48,12 @@ public class CompteDAO extends DAO<Compte> {
 	};
 	
 	public boolean update(Compte obj){
+		System.out.println("Appel de CompteDAO.update("+obj.toString()+")");
 		try{
 			String query="UPDATE comptes SET name = ? WHERE id_compte = ?";
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			state.setString(1, obj.getName());
-			state.setInt(2, obj.getIndex());
+			state.setInt(2, obj.getIdCompte());
 			int nb_rows = state.executeUpdate();
 			state.close();
 			return true;
@@ -60,7 +71,7 @@ public class CompteDAO extends DAO<Compte> {
 		try{
 			String query="DELETE FROM comptes WHERE id_compte = ?";
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			state.setInt(1, obj.getIndex());
+			state.setInt(1, obj.getIdCompte());
 			int nb_rows = state.executeUpdate();
 			System.out.println("Suppression de "+nb_rows+" ligne(s)");
 			state.close();
@@ -86,7 +97,7 @@ public class CompteDAO extends DAO<Compte> {
 			Compte compte = new Compte(
 					res.getString("name")
 					);
-			compte.setIndex(index);
+			compte.setIdCompte(index);
 			res.close();
 			state.close();
 			return compte;
@@ -111,7 +122,7 @@ public class CompteDAO extends DAO<Compte> {
 				Compte compte = new Compte(
 						res.getString("name")
 						);
-				compte.setIndex(res.getInt("id_compte"));
+				compte.setIdCompte(res.getInt("id_compte"));
 				data.add(compte);
 			}
 			System.out.println("CompteDAO.getData() : "+data.size()+" ligne(s) trouvées.");
@@ -129,8 +140,9 @@ public class CompteDAO extends DAO<Compte> {
 	};
 
 	public Compte newElement() {
-		Compte compte = Compte.values()[0];
+		Compte compte = Compte.defaultEntry();
 		this.create(compte);
+		System.out.println("CompteDAO.newElement(), compte créé = "+compte.toString());
 		return compte;
 	};
 

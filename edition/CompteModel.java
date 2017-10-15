@@ -42,6 +42,7 @@ public class CompteModel extends ZModel<Compte> {
 			  		break;
 			  	default:
 			  }
+			  fireTableRowsUpdated(row,row);
 		  }
 	  }
 	  
@@ -53,4 +54,21 @@ public class CompteModel extends ZModel<Compte> {
 		  return true;
 	  }
 	  
+	  public void removeRow(int position){
+		  Compte compte = data.get(position);
+
+		  // delete compte from the database
+		  boolean test = daoT.delete(compte);
+		  if (test){
+			  data.remove(position);
+			  // remove compte from ComptesCourants (if needs be)
+			  DataCenter.getInstance().updateComptesCourants(compte, false);
+		  } else {
+			  JOptionPane jop = new JOptionPane();
+			  jop.showMessageDialog(null, "removeRow dans ZModel a échoué","ERREUR",JOptionPane.ERROR_MESSAGE);
+		  }
+
+		  // Pour avertir le tableau que les données ont changé.
+		  this.fireTableDataChanged();
+	  }
 }

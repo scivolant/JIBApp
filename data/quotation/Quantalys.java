@@ -7,6 +7,8 @@ import java.util.Locale;
 
 import javax.swing.JOptionPane;
 
+import gestion.data.dao.DaoException;
+
 /*
  * Dernière tentative (2017.02.24) :
  * Le code renvoyé n'est pas le même que celui que je peux voir avec Firefox (?)
@@ -26,7 +28,7 @@ public class Quantalys extends Transfer {
 	}
 
 	@Override
-	public Date getDate(String text) throws QuotationException{
+	public Date getDate(String text) throws DaoException{
 		Date date = new Date(0);
 		
         // extraction de la date :
@@ -47,18 +49,18 @@ public class Quantalys extends Transfer {
 			e.printStackTrace();
 			JOptionPane jop = new JOptionPane();
 			jop.showMessageDialog(null, "Date pas au format dd/MM/yyyy ? "+e.getMessage(),"ERREUR ds Quantalys.getDate",JOptionPane.ERROR_MESSAGE);
-			throw new QuotationException();
+			throw new DaoException();
 		} catch (Exception e){
 			e.printStackTrace();
 			JOptionPane jop = new JOptionPane();
 			jop.showMessageDialog(null, e.getMessage(),"ERREUR ds Quantalys.getDate",JOptionPane.ERROR_MESSAGE);
-			throw new QuotationException();
+			throw new DaoException();
 		}
         return date;
 	}
 
 	@Override
-	public float getPrice(String text) throws QuotationException{
+	public float getPrice(String text) throws DaoException{
 		float price=0.f;
 		
         int p = text.indexOf("\"Contenu_Contenu_Contenu_lblVLDevise\"");
@@ -78,12 +80,12 @@ public class Quantalys extends Transfer {
 			e.printStackTrace();
 			JOptionPane jop = new JOptionPane();
 			jop.showMessageDialog(null, "priceString de la mauvaise forme ? "+e.getMessage(),"ERREUR ds Quantalys.getPrice",JOptionPane.ERROR_MESSAGE);
-			throw new QuotationException();
+			throw new DaoException();
 		} catch (Exception e){
 			e.printStackTrace();
 			JOptionPane jop = new JOptionPane();
 			jop.showMessageDialog(null, e.getMessage(),"ERREUR ds Quantalys.getPrice",JOptionPane.ERROR_MESSAGE);
-			throw new QuotationException();
+			throw new DaoException();
 		}
         return price;
 	}

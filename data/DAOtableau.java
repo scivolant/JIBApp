@@ -7,7 +7,7 @@ import java.util.Set;
 import gestion.compta.Compte;
 import gestion.compta.Placement;
 
-public abstract class DAOtableau<T> extends DAO<T>{
+public abstract class DAOtableau<T> extends Dao<T>{
 	
    	// Placement et comptes sélectionnés à retrouver par DataCenter
 	/*

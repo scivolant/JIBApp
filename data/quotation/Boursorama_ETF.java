@@ -9,17 +9,17 @@ import javax.swing.JOptionPane;
 
 import gestion.data.dao.DaoException;
 
-public class Boursorama extends Transfer {
+public class Boursorama_ETF extends Transfer {
 	
 	// Une seule instance attendue (mais un singleton paraissait un peu trop complexe)
 	// En outre, les "Transfer" seront sans doute appelés via Transfer.values()
-	public Boursorama() {
-		super("Boursorama");
+	public Boursorama_ETF() {
+		super("Boursorama ETF");
 	}
 	
 	// Identifiant de cette classe :
 	public int getIdTransf(){
-		return 3;
+		return 5;
 	}
 
 	@Override

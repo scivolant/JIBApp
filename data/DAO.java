@@ -8,11 +8,11 @@ import java.util.Set;
 import gestion.compta.Compte;
 import gestion.compta.Placement;
 
-public abstract class DAO<T>{
+public abstract class Dao<T>{
 	protected static Connection conn;
 	protected DataCenter dataCenter;
 	
-	public DAO(DataCenter dataCenter){
+	public Dao(DataCenter dataCenter){
 		this.dataCenter = dataCenter;
 		this.conn=dataCenter.getConn();
 	}

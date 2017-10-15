@@ -7,7 +7,7 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
-import gestion.data.quotation.QuotationException;
+import gestion.data.dao.DaoException;
 import gestion.data.quotation.Transfer;
 
 public class SourceQuote {
@@ -61,7 +61,7 @@ public class SourceQuote {
 	}
 	
 	// Renvoie un cours non-initialisé
-	public Cours getCours(Placement place) throws QuotationException{
+	public Cours getCours(Placement place) throws DaoException{
 		String text ="";
 		Cours cours = null;
 		System.out.println("=== SourceQuote.getCours("+place.toString()+") ===");
@@ -84,10 +84,10 @@ public class SourceQuote {
 		} catch (ConnectException e){
 			JOptionPane jop = new JOptionPane();
 			jop.showMessageDialog(null, e.getMessage(),"ERREUR !",JOptionPane.ERROR_MESSAGE);
-	    	throw new QuotationException();
+	    	throw new DaoException();
 		} catch (Exception e){
 	    	e.printStackTrace();
-	    	throw new QuotationException();
+	    	throw new DaoException();
 		}
 		return cours;
 	}

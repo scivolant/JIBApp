@@ -8,13 +8,13 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import gestion.compta.GestionType;
+import gestion.compta.Student;
 import gestion.compta.Placement;
 import gestion.compta.SourceQuote;
-import gestion.data.DAO;
+import gestion.data.Dao;
 import gestion.data.DataCenter;
 
-public class PlacementDAO extends DAO<Placement> {
+public class PlacementDAO extends Dao<Placement> {
 	
 	public PlacementDAO(DataCenter instance){
 		super(instance);
@@ -33,7 +33,7 @@ public class PlacementDAO extends DAO<Placement> {
 			state.setInt(6, obj.getSource().getIdSource());
 			int nb_rows = state.executeUpdate();
 			
-			// MàJ de id_trans (qui doit être à 0 jusque là)
+			// MàJ de id_placement (qui doit être à 0 jusque là)
 			ResultSet genKey = state.getGeneratedKeys();
 			if (genKey.next()){
 				obj.setIndex(genKey.getInt(1));
@@ -107,7 +107,7 @@ public class PlacementDAO extends DAO<Placement> {
 			state.setInt(1, index);
 			ResultSet res = state.executeQuery();
 			res.first();
-			GestionType type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
+			Student type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
 			SourceQuote source = DataCenter.getSourceQuoteDAO().find(res.getInt("id_source"));
 			Placement place = new Placement(
 					res.getString("name"),
@@ -132,26 +132,28 @@ public class PlacementDAO extends DAO<Placement> {
 		}	
 	};
 	
-	// Renvoie un placement (pleinement initialisé)
 	public Placement newElement(){
+		// Renvoie un placement 
+		// avec un id_placement correctement initialisé
+		// lequel est fourni par create(place)
 		Placement place = Placement.defaultEntry();
 		this.create(place);
 		return place;
 	}
 	
-	// Renvoie les placements adaptés au contexte (placeCourant pour l'instant)
-	// À terme, adapté à comptesCourants
 	public LinkedList<Placement> getData() {
+		// Renvoie les placements adaptés au contexte
+		// À adapter à comptesCourants
 		LinkedList<Placement> data = new LinkedList<Placement>();
 		try{
 			String query="SELECT id_placement,name,mnemo,id_type,isin,codemaj,id_source"
-					+ " FROM placements ORDER BY id_placement ";
+					+ " FROM placements ORDER BY name ";
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet res = state.executeQuery();
 			int i = 0;
 			while(res.next()){
 				i++;
-				GestionType type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
+				Student type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
 				SourceQuote source = DataCenter.getSourceQuoteDAO().find(res.getInt("id_source"));
 				Placement place = new Placement(
 						res.getString("name"),
@@ -184,11 +186,11 @@ public class PlacementDAO extends DAO<Placement> {
 		LinkedList<Placement> data = new LinkedList<Placement>();
 		try{
 			String query="SELECT id_placement,name,mnemo,id_type,isin,codemaj,id_source"
-					+ " FROM placements ORDER BY id_placement";
+					+ " FROM placements ORDER BY name";
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet res = state.executeQuery();
 			while(res.next()){
-				GestionType type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
+				Student type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
 				SourceQuote source = DataCenter.getSourceQuoteDAO().find(res.getInt("id_source"));
 				Placement place = new Placement(
 						res.getString("name"),
@@ -200,9 +202,6 @@ public class PlacementDAO extends DAO<Placement> {
 						);
 				place.setIndex(res.getInt("id_placement"));
 				data.add(place);
-			}
-			for (Placement place:data){
-				System.out.println(place);
 			}
 			res.close();
 			state.close();

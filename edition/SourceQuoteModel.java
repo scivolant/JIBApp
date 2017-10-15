@@ -1,6 +1,6 @@
 package gestion.edition;
 
-import gestion.compta.GestionType;
+import gestion.compta.Student;
 import gestion.compta.SourceQuote;
 import gestion.data.DataCenter;
 import gestion.data.quotation.Transfer;

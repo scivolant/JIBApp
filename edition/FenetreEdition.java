@@ -2,12 +2,11 @@ package gestion.edition;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import gestion.data.DataCenter;
+import gestion.util.FenetreCommun;
 
-public class FenetreEdition extends JPanel {
+public class FenetreEdition extends FenetreCommun {
 	
 	/*
 	 * 

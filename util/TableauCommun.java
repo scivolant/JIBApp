@@ -1,4 +1,4 @@
-package gestion.operation;
+package gestion.util;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -11,9 +11,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import gestion.compta.Placement;
-import gestion.data.DAOtableau;
-import gestion.data.DataCenter;
-import gestion.util.ZModel;
 
 /* 
  * Classe-mère implémentant les 
@@ -26,16 +23,16 @@ public class TableauCommun<T> extends JPanel{
 	protected Placement place;
 	protected JTable tableau;
 	protected JPanel pan;
-	protected ZModel<T> model;
+	protected JButton sauvegarde;
 	
 	public TableauCommun(ZModel<T> model){
 		super(new BorderLayout());
-		this.model = model;
+		//this.model = model;
 	    this.tableau = new JTable(model);
 	    this.tableau.setRowHeight(30);
 	    
 		JButton nouvelleLigne = new JButton("Ajouter une ligne");
-		JButton sauvegarde = new JButton("Svg/MàJ");
+		sauvegarde = new JButton("Svg/MàJ");
 	    
 		class AddListener implements ActionListener{
 			public void actionPerformed(ActionEvent event){		
@@ -44,20 +41,17 @@ public class TableauCommun<T> extends JPanel{
 		}
 		
 		class SvgListener implements ActionListener{
-			ZModel<T> model;
-			
-			public SvgListener(ZModel<T> model){
-				super();
-				this.model=model;
-			}
 			
 			public void actionPerformed(ActionEvent event){
+				// MàJ de la table (en part. calcul des prix)
+				((ZModel<T>)tableau.getModel()).fireTableDataChanged();
+				// Svg 
 				svgMaJTableau();
 			}
 		}
 	    
 	    nouvelleLigne.addActionListener(new AddListener());
-	    sauvegarde.addActionListener(new SvgListener(model));
+	    sauvegarde.addActionListener(new SvgListener());
 	    
 	    GridLayout gl1 = new GridLayout(1,2);
 	    gl1.setHgap(5);
@@ -75,14 +69,16 @@ public class TableauCommun<T> extends JPanel{
 		return this.tableau;
 	}
 	
+
 	public ZModel<T> getModel(){
-		return this.model;
+		return (ZModel<T>)tableau.getModel();
 	}
 	
-	// Action effectuée par le bouton "Svg/MàJ" (modif. dans TableauTrans)
+	// Action effectuée par le bouton "Svg/MàJ" (modif. dans TableauTrans, TableauPlacement)
 	public void svgMaJTableau(){
 		// Sauvegarde des données modifiées
 		int i = 0;
+		ZModel<T> model = (ZModel<T>)tableau.getModel();
 		for (T obj : model.getData()){
 			if (model.getDaoT().update(obj)){
 				i++;						

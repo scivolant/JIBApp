@@ -111,7 +111,7 @@ public class Transaction {
 	}
 	
 	public String toString(){
-		return "Transaction "+this.getIdTrans()+", "+this.getPlace().toString();
+		return "Transaction "+this.getIdTrans()+", "+this.getPlace().toString()+" totUC ="+(addUC-dimUC)+" totEUR ="+(addEUR-dimEUR);
 	}
 	
 	// entrée par défaut, initialisée à index = 0
@@ -124,7 +124,7 @@ public class Transaction {
 				new Float(0),
 				new Float(0), 
 				new Float(0), 
-				new Float(1), 
+				new Float(0), 
 				new Float(0));
 		return transac;
 	}

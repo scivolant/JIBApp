@@ -4,12 +4,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
 import gestion.accueil.ButtonRenderer;
-import gestion.operation.TableauCommun;
 import gestion.util.ButtonDeleteEditor;
+import gestion.util.TableauCommun;
 import gestion.util.ZModel;
 
 /* 
- * Classe fille de TableauCommun, spécialisée à Ordre (sans panneau synthèse)
+ * Classe fille de TableauCommun, sans panneau synthèse
+ * Utilisé pour Compte et Type en part.
  * 
  */
 

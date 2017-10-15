@@ -72,6 +72,7 @@ public class OrdresModel extends ZModel<Ordre> {
 			  		break;
 			  	default:
 			  }
+			  fireTableRowsUpdated(row,row);
 		  }
 	  }
 	  

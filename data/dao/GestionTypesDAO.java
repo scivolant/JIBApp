@@ -4,30 +4,37 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
 import gestion.compta.Compte;
-import gestion.compta.GestionType;
+import gestion.compta.Student;
 import gestion.compta.Transaction;
-import gestion.data.DAO;
+import gestion.data.Dao;
 import gestion.data.DataCenter;
 
-public class GestionTypesDAO extends DAO<GestionType> {
+public class GestionTypesDAO extends Dao<Student> {
 	
 	public GestionTypesDAO(DataCenter instance){
 		super(instance);
 	}
 
 	@Override
-	public boolean create(GestionType obj) {
+	public boolean create(Student obj) {
 		try{
 			String query="INSERT INTO types(name) VALUES(?)";
-			PreparedStatement state = conn.prepareStatement(query);
+			PreparedStatement state = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			state.setString(1, obj.toString());
 			int nb_rows = state.executeUpdate();
+			
+			// MàJ de id_compte (qui doit être à 0 jusque là)
+			ResultSet genKey = state.getGeneratedKeys();
+			if (genKey.next()){
+				obj.setIdType(genKey.getInt(1));
+			};
 			state.close();
 			return true;
 		} catch (SQLException e){
@@ -41,7 +48,7 @@ public class GestionTypesDAO extends DAO<GestionType> {
 	}
 
 	@Override
-	public boolean update(GestionType obj) {
+	public boolean update(Student obj) {
 		try{
 			String query="UPDATE types SET name = ? WHERE id_type = ?";
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -61,7 +68,7 @@ public class GestionTypesDAO extends DAO<GestionType> {
 	}
 
 	@Override
-	public boolean delete(GestionType obj) {
+	public boolean delete(Student obj) {
 		try{
 			String query="DELETE FROM types WHERE id_type = ?";
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -81,14 +88,14 @@ public class GestionTypesDAO extends DAO<GestionType> {
 	}
 
 	@Override
-	public GestionType find(int index) {
+	public Student find(int index) {
 		try{
 			String query="SELECT id_type, name FROM types WHERE id_type = ?";
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			state.setInt(1, index);
 			ResultSet res = state.executeQuery();
 			res.first();
-			GestionType type = new GestionType(res.getInt("id_type"),res.getString("name"));
+			Student type = new Student(res.getInt("id_type"),res.getString("name"));
 			res.close();
 			state.close();
 			return type;
@@ -104,19 +111,19 @@ public class GestionTypesDAO extends DAO<GestionType> {
 	
 	// renvoie le type par défaut (en espérant qu'il existe !)
 	// NB : il vient avec un indice qui existe déjà dans la base.
-	public GestionType newElement(){
-		GestionType type = GestionType.defaultEntry();
+	public Student newElement(){
+		Student type = Student.defaultEntry();
 		this.create(type);
 		return type;
 	}
 	
 	// renvoie un élément de GestionTypes (soit le premier venu, soit on en crée un nouveau, que l'on inclus dans la base de données)
-	public GestionType anyElement(){
+	public Student anyElement(){
 		try{
 			String query="SELECT id_type, name FROM types ORDER BY id_type LIMIT 1";
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet res = state.executeQuery();
-			GestionType type;
+			Student type;
 			if (res.first()){
 				type = this.find(res.getInt("id_type"));
 			} else {
@@ -135,14 +142,14 @@ public class GestionTypesDAO extends DAO<GestionType> {
 		}
 	}
 	
-	public LinkedList<GestionType> getData() {
-		LinkedList<GestionType> data = new LinkedList<GestionType>();
+	public LinkedList<Student> getData() {
+		LinkedList<Student> data = new LinkedList<Student>();
 		try{
 			String query="SELECT id_type, name FROM types ORDER BY id_type";
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet res = state.executeQuery();
 			while(res.next()){
-				GestionType type = new GestionType(
+				Student type = new Student(
 						res.getInt("id_type"),
 						res.getString("name")
 						);
