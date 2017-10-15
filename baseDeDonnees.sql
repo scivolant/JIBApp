@@ -15,6 +15,13 @@ create table types(
 	, name text
     	);
 
+create table sourcequotes(
+	id_source serial primary key
+	, name text
+	, url text
+	, id_transf integer
+	);
+
 create table placements(
 	id_placement serial primary key
 	, name text
@@ -22,7 +29,7 @@ create table placements(
 	, id_type integer references types
 	, ISIN text
 	, codeMaJ text
-	, id_source integer
+	, id_source integer references sourcequotes
 	);
 
 create table transactions(
@@ -54,11 +61,4 @@ create table cours(
 	, id_placement serial references placements
 	, cours_date date
 	, coursUnit real
-	);
-
-create table sourcequotes(
-	id_source serial primary key
-	, name text
-	, url text
-	, id_transf integer
 	);

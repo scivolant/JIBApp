@@ -17,6 +17,9 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import gestion.accueil.FenetreAccueil;
@@ -41,7 +44,7 @@ public class GestionSuivi {
 	public GestionSuivi(){
 		JFrame fg = new JFrame();
 		content = new JPanel();
-		fg.setTitle("Gestion & suivi");
+		fg.setTitle("JIBApp");
 		fg.setSize(700, 600);
 		fg.setLocationRelativeTo(null);
 		fg.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,6 +53,25 @@ public class GestionSuivi {
 		content.setLayout(cl);
 		
 		DataCenter dataCenter = DataCenter.getInstance();
+		
+		// ===============================
+		// Create the menu bar
+		// ===============================
+		JMenuBar menuBar = new JMenuBar();
+		JMenu filesMenu = new JMenu("Menu");
+		JMenuItem item1 = new JMenuItem("Importer...");
+		JMenuItem item2 = new JMenuItem("About: JIBApp © 2017 by O. Gabriel.");
+		menuBar.add(filesMenu);
+		filesMenu.add(item1);
+		filesMenu.add(item2);
+
+		item1.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0){
+				System.out.println("GestionBilicence: 'Import' of MenuBar activated!");
+				//CsvImport csvImport = new CsvImport();
+				//csvImport.importCsv();
+			}
+		});
 		
 		// Initialisation de fenetreOperation
 		FenetreOperation fenetreOperation = new FenetreOperation();
@@ -143,6 +165,7 @@ public class GestionSuivi {
 		//fenetreAccueil.updateFenetre();
 		
 		// Positionnement des différents éléments
+		fg.setJMenuBar(menuBar);
 		fg.getContentPane().setLayout(new BorderLayout());
 		fg.getContentPane().add(panHaut, BorderLayout.NORTH);
 		fg.getContentPane().add(content, BorderLayout.CENTER);
