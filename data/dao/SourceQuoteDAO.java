@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import gestion.compta.Student;
+import gestion.compta.GestionType;
 import gestion.compta.Placement;
 import gestion.compta.SourceQuote;
 import gestion.data.Dao;

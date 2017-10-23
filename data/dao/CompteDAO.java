@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import javax.swing.JOptionPane;
 
 import gestion.compta.Compte;
-import gestion.compta.Student;
+import gestion.compta.GestionType;
 import gestion.data.Dao;
 import gestion.data.DataCenter;
 
@@ -21,6 +21,10 @@ public class CompteDAO extends Dao<Compte> {
 	}
 
 	public boolean create(Compte obj){
+		/*
+		 * Create function for Compte.
+		 * Updates IdCompte to match the id_compte
+		 */
 		try{
 			String query="INSERT INTO comptes(name) VALUES(?)";
 			PreparedStatement state = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -29,11 +33,10 @@ public class CompteDAO extends Dao<Compte> {
 			
 			// MàJ de id_compte (qui doit être à 0 jusque là)
 			ResultSet genKey = state.getGeneratedKeys();
-			System.out.println("CompteDAO.create, après genKey");
 			if (genKey.next()){
 				
 				obj.setIdCompte(genKey.getInt(1));
-				System.out.println("Dans CompteDAO.create, compte à jour = "+obj.toString());
+				System.out.println("Dans CompteDAO.create, compte à jour = "+obj.toString()+", IdCompte = "+obj.getIdCompte());
 			};
 			state.close();
 			return (nb_rows !=0);

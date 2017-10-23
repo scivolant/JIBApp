@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import gestion.compta.Student;
+import gestion.compta.GestionType;
 import gestion.compta.Placement;
 import gestion.compta.SourceQuote;
 import gestion.data.Dao;
@@ -107,7 +107,7 @@ public class PlacementDAO extends Dao<Placement> {
 			state.setInt(1, index);
 			ResultSet res = state.executeQuery();
 			res.first();
-			Student type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
+			GestionType type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
 			SourceQuote source = DataCenter.getSourceQuoteDAO().find(res.getInt("id_source"));
 			Placement place = new Placement(
 					res.getString("name"),
@@ -153,7 +153,7 @@ public class PlacementDAO extends Dao<Placement> {
 			int i = 0;
 			while(res.next()){
 				i++;
-				Student type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
+				GestionType type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
 				SourceQuote source = DataCenter.getSourceQuoteDAO().find(res.getInt("id_source"));
 				Placement place = new Placement(
 						res.getString("name"),
@@ -190,7 +190,7 @@ public class PlacementDAO extends Dao<Placement> {
 			PreparedStatement state = conn.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			ResultSet res = state.executeQuery();
 			while(res.next()){
-				Student type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
+				GestionType type = DataCenter.getGestionTypesDAO().find(res.getInt("id_type"));
 				SourceQuote source = DataCenter.getSourceQuoteDAO().find(res.getInt("id_source"));
 				Placement place = new Placement(
 						res.getString("name"),

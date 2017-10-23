@@ -8,7 +8,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 
 import gestion.accueil.ButtonRenderer;
-import gestion.compta.Student;
+import gestion.compta.GestionType;
 import gestion.compta.Placement;
 import gestion.compta.SourceQuote;
 import gestion.data.DataCenter;
@@ -21,7 +21,7 @@ import gestion.util.TableauCommun;
  */
 
 public class TableauPlacement extends TableauCommun<Placement>{
-    private JComboBox<Student> comboType;
+    private JComboBox<GestionType> comboType;
     private JComboBox<SourceQuote> comboSource;
 	
 	public TableauPlacement(){
@@ -31,8 +31,8 @@ public class TableauPlacement extends TableauCommun<Placement>{
 		// {"Nom", "Type", "ISIN", "Code M‡J", "Source", "Suppr."}
 	    
 		// Combo box avec les types dispos
-		LinkedList<Student> listeType = DataCenter.getGestionTypesDAO().getData();
-	    comboType = new JComboBox<Student>(listeType.toArray(new Student[listeType.size()]));
+		LinkedList<GestionType> listeType = DataCenter.getGestionTypesDAO().getData();
+	    comboType = new JComboBox<GestionType>(listeType.toArray(new GestionType[listeType.size()]));
 	    this.tableau.getColumn("Type").setCellEditor(new DefaultCellEditor(comboType));
 	    
 		// Combo box avec les sources dispos
@@ -52,8 +52,8 @@ public class TableauPlacement extends TableauCommun<Placement>{
 	// redÈfinition action effectuÈe par le bouton "Svg/M‡J"
 	public void svgMaJTableau(){
 		// M‡J des combos :
-		LinkedList<Student> listeType = DataCenter.getGestionTypesDAO().getData();
-	    comboType = new JComboBox<Student>(listeType.toArray(new Student[listeType.size()]));
+		LinkedList<GestionType> listeType = DataCenter.getGestionTypesDAO().getData();
+	    comboType = new JComboBox<GestionType>(listeType.toArray(new GestionType[listeType.size()]));
 	    this.tableau.getColumn("Type").setCellEditor(new DefaultCellEditor(comboType));
 	    
 		LinkedList<SourceQuote> listeSource = DataCenter.getSourceQuoteDAO().getData();

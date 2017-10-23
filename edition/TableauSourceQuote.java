@@ -8,7 +8,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 
 import gestion.accueil.ButtonRenderer;
-import gestion.compta.Student;
+import gestion.compta.GestionType;
 import gestion.compta.SourceQuote;
 import gestion.data.quotation.Transfer;
 import gestion.util.ButtonDeleteEditor;

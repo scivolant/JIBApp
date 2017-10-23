@@ -6,13 +6,13 @@ import gestion.data.dao.SourceQuoteDAO;
 public class Placement {
 	private String name;
 	private String mnemo;
-	private Student type;
+	private GestionType type;
 	private String ISIN;
 	private String codeMaJ;
 	private SourceQuote source;
 	private int index;
 	
-	public Placement(String name, String mnemo, Student type, String ISIN, String codeMaJ, SourceQuote source){
+	public Placement(String name, String mnemo, GestionType type, String ISIN, String codeMaJ, SourceQuote source){
 		this.name = name;
 		this.mnemo = mnemo;
 		this.type = type;
@@ -31,7 +31,7 @@ public class Placement {
 		return this.mnemo;
 	}
 	
-	public Student getType(){
+	public GestionType getType(){
 		return this.type;
 	}
 	
@@ -60,7 +60,7 @@ public class Placement {
 		this.mnemo = mnemo;
 	}
 	
-	public void setType(Student type){
+	public void setType(GestionType type){
 		this.type = type;
 	}
 	
@@ -87,7 +87,7 @@ public class Placement {
 	
 	// Placement par défaut, initialisé avec un indice = 0 (mis à jour ensuite par PlacementDAO.create)
 	public static Placement defaultEntry(){
-		Student type = DataCenter.getGestionTypesDAO().anyElement();
+		GestionType type = DataCenter.getGestionTypesDAO().anyElement();
 		SourceQuote source = DataCenter.getSourceQuoteDAO().anyElement();
 		Placement place = new Placement("Placement par défaut", "ParDef", type, "FRxxxyyy", "ParDef", source);
 		return place;

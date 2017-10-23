@@ -14,6 +14,7 @@ INSERT INTO types(name) VALUES('ETF');
 INSERT INTO types(name) VALUES('OPCVM');
 INSERT INTO types(name) VALUES('Obligations');
 INSERT INTO types(name) VALUES('Immo');
+INSERT INTO types(name) VALUES('Action');
 
 INSERT INTO sourcequotes(name, url, id_transf) VALUES('FT ETF', 'https://markets.ft.com/data/etfs/tearsheet/summary?s=',1);
 INSERT INTO sourcequotes(name, url, id_transf) VALUES('FT ordinaire', 'http://funds.ft.com/uk/Tearsheet/Summary?s=',2);

@@ -1,7 +1,6 @@
 package gestion.edition;
 
-import gestion.compta.Compte;
-import gestion.compta.Student;
+import gestion.compta.GestionType;
 import gestion.compta.Placement;
 import gestion.compta.SourceQuote;
 import gestion.data.DataCenter;
@@ -11,7 +10,7 @@ public class PlacementModel extends ZModel<Placement> {
 	  
 	  public PlacementModel(){
 			super(
-				new Class[] {String.class, Student.class, String.class, String.class, SourceQuote.class, String.class},
+				new Class[] {String.class, GestionType.class, String.class, String.class, SourceQuote.class, String.class},
 				new String[] {"Nom", "Type", "ISIN", "Code M‡J", "Source", "Suppr."},
 				DataCenter.getPlacementDAO()
 					);
@@ -43,7 +42,7 @@ public class PlacementModel extends ZModel<Placement> {
 			  		data.get(row).setName((String)value);
 			  		break;
 			  	case 1:
-			  		data.get(row).setType((Student)value);
+			  		data.get(row).setType((GestionType)value);
 			  		break;
 			  	case 2:
 			  		data.get(row).setISIN((String)value);

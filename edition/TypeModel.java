@@ -1,10 +1,10 @@
 package gestion.edition;
 
-import gestion.compta.Student;
+import gestion.compta.GestionType;
 import gestion.data.DataCenter;
 import gestion.util.ZModel;
 
-public class TypeModel extends ZModel<Student> {
+public class TypeModel extends ZModel<GestionType> {
 	  
 	  public TypeModel(){
 			super(

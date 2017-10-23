@@ -28,6 +28,7 @@ import gestion.compta.Compte;
 import gestion.data.DataCenter;
 import gestion.edition.FenetreEdition;
 import gestion.operation.FenetreOperation;
+import gestion.sqliteImport.SqliteImport;
 import gestion.util.FenetreCommun;
 
 
@@ -68,8 +69,8 @@ public class GestionSuivi {
 		item1.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0){
 				System.out.println("GestionBilicence: 'Import' of MenuBar activated!");
-				//CsvImport csvImport = new CsvImport();
-				//csvImport.importCsv();
+				SqliteImport sqliteImport = new SqliteImport();
+				sqliteImport.importSqlite();
 			}
 		});
 		

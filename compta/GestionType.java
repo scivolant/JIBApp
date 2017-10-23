@@ -25,6 +25,10 @@ public class GestionType {
 		this.name =name;
 	}
 	
+	public void setIdType(int id_type){
+		this.id_type =id_type;
+	}
+	
 	public static GestionType[] values(){
 		String[] namesTypes = {"ETF","OPCVM","Obligations","Immo"};
 		GestionType[] vectTypes = new GestionType[namesTypes.length];
