@@ -113,7 +113,12 @@ public class FenetreOperation extends FenetreCommun{
 		
 		// Opération prédéfinie disponible ou non...
 		Placement place = DataCenter.getInstance().getPlaceCourant();
-		predefBouton.setEnabled(predefSet.contains(place.getIndex()));
+		try {
+			predefBouton.setEnabled(predefSet.contains(place.getIndex()));
+		} catch (NullPointerException e) {
+			predefBouton.setEnabled(false);
+		}
+		
 		
 		// MàJ des données
 		tabTrans.updateTableau();
@@ -155,13 +160,18 @@ public class FenetreOperation extends FenetreCommun{
 		ComboBoxModel<Placement> model = new DefaultComboBoxModel<Placement>(vectPlacement);
 		this.comboPlacement.setModel(model);
 		
-		int indPlaceCourant = dataCenter.getPlaceCourant().getIndex();
-		for (int index = 0; index < size ; index++){
-			if (vectPlacement[index].getIndex()== indPlaceCourant){
-				this.comboPlacement.setSelectedIndex(index);
-				System.out.println("== FenetreOperation.updateComboPlacement(), trouvé = "+index);
-				break;
+		try {
+			int indPlaceCourant = dataCenter.getPlaceCourant().getIndex();
+			for (int index = 0; index < size ; index++){
+				if (vectPlacement[index].getIndex()== indPlaceCourant){
+					this.comboPlacement.setSelectedIndex(index);
+					System.out.println("== FenetreOperation.updateComboPlacement(), trouvé = "+index);
+					break;
+				}
 			}
+		} catch (NullPointerException e) {
+			// pas de PlaceCourant dispo
+			// ne rien faire
 		}
 	}
 

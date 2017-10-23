@@ -36,7 +36,7 @@ public class CompteDAO extends Dao<Compte> {
 			if (genKey.next()){
 				
 				obj.setIdCompte(genKey.getInt(1));
-				System.out.println("Dans CompteDAO.create, compte à jour = "+obj.toString()+", IdCompte = "+obj.getIdCompte());
+				//System.out.println("Dans CompteDAO.create, compte à jour = "+obj.toString()+", IdCompte = "+obj.getIdCompte());
 			};
 			state.close();
 			return (nb_rows !=0);

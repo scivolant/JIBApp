@@ -1,17 +1,24 @@
 package gestion.sqliteImport;
 
+
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.math3.fraction.BigFractionFormat;
 
 import gestion.compta.Compte;
+import gestion.compta.Cours;
 import gestion.compta.GestionType;
 import gestion.compta.Placement;
 import gestion.compta.SourceQuote;
+import gestion.compta.Transaction;
 import gestion.data.DataCenter;
 
 public class BasicImportReader extends AbstractImportReader {
@@ -35,13 +42,13 @@ public class BasicImportReader extends AbstractImportReader {
             // create a connection to the database
             conn = DriverManager.getConnection(url);
             
-            System.out.println("Connection to SQLite has been established.");
-            
             Map<String,Compte> mapCompte = createComptes(conn);
-            System.out.println(mapCompte);
             
             Map<String,Placement> mapPlacement = createPlacements(conn);
-            System.out.println(mapPlacement);
+            
+            createTransactions(conn, mapCompte, mapPlacement);
+            
+            createCours(conn, mapPlacement);
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -198,5 +205,125 @@ public class BasicImportReader extends AbstractImportReader {
 							);
 		DataCenter.getPlacementDAO().create(place);
 		return place;
+	}
+	
+	private void createTransactions(Connection conn, Map<String,Compte> mapCompte, Map<String,Placement> mapPlacement) {
+		/**
+		 * A method that creates Transactions directly in the database;
+		 * 
+		 * NB:
+		 * _ It does not check whether these Transactions already exist.
+		 * _ Uses the maps mapCompte and mapPlacement to identify the relevant objects.
+		 */
+		
+        // Create all "comptes":
+       String query="select a.currencyId as id_placement, b.parentId as id_compte,"
+       		+ " balDate as transac_date, shares, value from kmmBalances as a,"
+       		+ " kmmAccounts as b where b.id = a.id and b.isStockAccount = 'Y'";
+		try {
+			PreparedStatement state = conn.prepareStatement(query);
+			ResultSet res = state.executeQuery();
+			while(res.next()){
+				Float shareFloat, valueFloat;
+				try {
+					BigFractionFormat ff = new BigFractionFormat();
+					shareFloat = ff.parse(res.getString("shares")).floatValue();
+					valueFloat = ff.parse(res.getString("value")).floatValue();
+				} catch (Exception e) {
+					System.out.println("BasicImportReader.createTransactions -- pb dans l'éval. shares et value");
+					System.out.println("shares = "+res.getString("shares"));
+					System.out.println("value = "+res.getString("value"));
+					shareFloat = 0f;
+					valueFloat = 0f;
+				}
+
+				Float coursUnit = 0f;
+				try {
+					coursUnit = valueFloat/shareFloat;
+				} catch (ArithmeticException e) {
+					System.out.println("BasicImportReader.createTransactions -- division par 0 !");
+				}
+				
+				// computation of addEur and dimEur
+				Float addEur, dimEur;
+				if (valueFloat >= 0) {
+					addEur = valueFloat;
+					dimEur = 0f;
+				} else {
+					addEur = 0f;
+					dimEur = -valueFloat;					
+				}
+				
+				// computation of addUC and dimUC
+				Float addUC, dimUC;
+				if (shareFloat >= 0) {
+					addUC = shareFloat;
+					dimUC = 0f;
+				} else {
+					addUC = 0f;
+					dimUC = -shareFloat;					
+				}
+				
+				Transaction transac = new Transaction(
+						Date.valueOf(res.getString("transac_date")),
+						mapPlacement.get(res.getString("id_placement")),
+						mapCompte.get(res.getString("id_compte")),
+						coursUnit,
+						addUC,
+						dimUC,
+						addEur,
+						dimEur
+						);
+				
+				DataCenter.getTransacDAO().create(transac);
+			}
+			state.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void createCours(Connection conn, Map<String,Placement> mapPlacement) {
+		/**
+		 * A method that creates Cours directly in the database;
+		 * 
+		 * NB:
+		 * _ It does not check whether these Cours already exist.
+		 * _ Uses mapPlacement to identify the relevant Placements.
+		 */
+
+		Set<String> setIdPlacement = mapPlacement.keySet();
+
+		try {
+			String query="select fromId, priceDate, price from kmmPrices where fromId = ?";
+			PreparedStatement state = conn.prepareStatement(query);
+
+			for (String idPlacement : setIdPlacement) {
+				Placement place = mapPlacement.get(idPlacement);
+
+				state.setString(1,idPlacement);
+				ResultSet res = state.executeQuery();
+
+				while(res.next()){
+					Float coursUnit;
+					try {
+						BigFractionFormat ff = new BigFractionFormat();
+						coursUnit = ff.parse(res.getString("price")).floatValue();
+					} catch (Exception e) {
+						System.out.println("BasicImportReader.createCours -- pb dans l'éval. price");
+						coursUnit = 0f;
+					}
+					Cours cours = new Cours(
+							Date.valueOf(res.getString("priceDate")),
+							place,
+							coursUnit
+							);
+					DataCenter.getCoursDAO().create(cours);
+				}		
+			}
+			state.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
