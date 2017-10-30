@@ -23,12 +23,13 @@ public abstract class Transfer {
 	}
 	
 	public static Transfer[] values(){
-		Transfer[] vect = new Transfer[5];
+		Transfer[] vect = new Transfer[6];
 		vect[0] = new FT_ETF();
 		vect[1] = new FT_ordinaire();
 		vect[2] = new Boursorama();
 		vect[3] = new Mano();
 		vect[4] = new Boursorama_ETF();
+		vect[5] = new Yahoo();
 		return vect;
 	}
 	

@@ -151,7 +151,8 @@ public class BasicImportReader extends AbstractImportReader {
 		 * and returns the updated Placement.
 		 */
 		GestionType type;
-		SourceQuote sq;
+		SourceQuote sq = null;
+		System.out.println(symbol);
 		
 		// pour retrouver la source : parse de la forme de symbol...
 		if (symbol.matches("(\\w+):(\\w+):(\\w+)")) {
@@ -160,17 +161,12 @@ public class BasicImportReader extends AbstractImportReader {
 			// et par ailleurs sourceQuotes est "FT ETF"
 			sq = DataCenter.getSourceQuoteDAO().find(1);
 		} else {
-			if (symbol.matches("(\\w+):EU")) {
+			if (symbol.matches("(\\w+):EUR")) {
 				// il s'agit d'un OPCVM mis à jour grâce à "FT ordinaire"
 				sq = DataCenter.getSourceQuoteDAO().find(2);
 			} else {
-				if (symbol.matches("(\\w+).PA")) {
-					// il s'agit d'un OPCVM mis à jour grâce à "Yahoo"
-					sq = DataCenter.getSourceQuoteDAO().find(3);
-				} else {
-					// pas d'idée particulière :
-					sq = DataCenter.getSourceQuoteDAO().find(4);
-				}
+				// pas d'idée particulière : pas de mise à jour
+				sq = DataCenter.getSourceQuoteDAO().find(5);
 			}
 		}
 		

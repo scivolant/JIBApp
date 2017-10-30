@@ -1,4 +1,4 @@
--- Définition des tables pour le project GestionSuivi
+-- Définition des tables pour le projet JIBapp
 -- fichier en UTF-8
 --
 -- Pour créer la base de donnée elle-même,

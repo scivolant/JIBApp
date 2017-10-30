@@ -20,7 +20,7 @@ import javax.swing.JTextField;
  * Classe pour paramétrer la connexion. 
  * Choix parmi prédéfinis ; 
  * _ String host (localhost)
- * _ String dataBase (postgres, gestionsuivi) 
+ * _ String dataBase (postgres, JIBApp) 
  * Récupère :
  * _ String user
  * _ String passwd
@@ -46,7 +46,7 @@ public class DialogueConnection extends JDialog{
 		
 		// Choix de la base de données :
 		JLabel dbLabel = new JLabel("Choix de la base :");
-		JComboBox<String> dbCombo = new JComboBox<String>(new String[]{"postgres", "gestionsuivi"});
+		JComboBox<String> dbCombo = new JComboBox<String>(new String[]{"postgres", "jibapp"});
 		
 		// user :
 		JLabel userLabel = new JLabel("Utilisateur :");
