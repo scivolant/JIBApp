@@ -15,6 +15,7 @@ import javax.swing.JTable;
 
 import gestion.compta.Placement;
 import gestion.data.DataCenter;
+import gestion.data.quotation.QuotationUpdate;
 import gestion.util.FenetreCommun;
 
 public class FenetreAccueil extends FenetreCommun {
@@ -73,11 +74,14 @@ public class FenetreAccueil extends FenetreCommun {
 	    class DCoursListener implements ActionListener{
 			
 			public void actionPerformed(ActionEvent event){
-				// recherche des derniers cours, pour tous les placements
-				LinkedList<Placement> data = dataSql.getPlacementDAO().getAll();
-				for (Placement place: data){
-					dataSql.dernierCoursMaJ(place);
-				}
+				QuotationUpdate qu = new QuotationUpdate();
+				
+//				// recherche des derniers cours, pour tous les placements
+//				LinkedList<Placement> data = dataSql.getPlacementDAO().getAll();
+//				for (Placement place: data){
+//					dataSql.dernierCoursMaJ(place);
+//				}
+				
 				System.out.println("DCoursListener : mise à jour des cours terminée !");
 				
 				// MàJ des ordres
