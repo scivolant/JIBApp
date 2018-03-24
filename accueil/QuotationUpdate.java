@@ -1,4 +1,4 @@
-package gestion.data.quotation;
+package gestion.accueil;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -22,10 +22,11 @@ public class QuotationUpdate extends JFrame {
 	private LinkedList<Placement> data;
 	
 	public QuotationUpdate() {
-		this.setSize(300,120);
+		this.setSize(400,120);
 		this.setTitle("Quotation Update");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
+		this.setAlwaysOnTop(true);
 		
 		// recherche des placements disponibles
 		dataCenter = DataCenter.getInstance();
@@ -45,7 +46,7 @@ public class QuotationUpdate extends JFrame {
 			}
 		});
 		
-		JLabel label = new JLabel("Veuillez patienter, mise à jour en cours...");
+		JLabel label = new JLabel("Recherche des derniers cours, veuillez patienter...");
 		
 		this.getContentPane().add(label, BorderLayout.NORTH);
 		this.getContentPane().add(bar ,BorderLayout.CENTER);

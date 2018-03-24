@@ -15,7 +15,6 @@ import javax.swing.JTable;
 
 import gestion.compta.Placement;
 import gestion.data.DataCenter;
-import gestion.data.quotation.QuotationUpdate;
 import gestion.util.FenetreCommun;
 
 public class FenetreAccueil extends FenetreCommun {
