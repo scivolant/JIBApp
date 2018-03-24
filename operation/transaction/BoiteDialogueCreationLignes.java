@@ -15,6 +15,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 
 import gestion.compta.Compte;
 import gestion.compta.Placement;
@@ -26,66 +27,95 @@ import gestion.util.ZModel;
 /**
  * 
  * @author Trivy
- * Classe pour la création des nouvelles lignes (sur répartition prédéfinie).
+ * Classe pour la création de nouvelles lignes (sur répartition prédéfinie).
+ * 
+ * Les nouvelles lignes à créer sont réparties sur plusieurs placements différents.
+ * 
  */
 
 public class BoiteDialogueCreationLignes extends JDialog{
 	
-	// Placement[] listePlacement = Placement.values();
-	// les deux placements pour lesquels on a des transac. prédéf. 
-	// listePlacement[2] <-> ETF Euro
-	// listePlacement[5] <-> ETF DJ (US)
-	protected HashSet<Integer> predefSet;
+	private DataCenter dataCenter = DataCenter.getInstance();
 	private TableauTransaction tabTrans;
+	private Placement[] listePlacement = {
+			// corresponds to Carmignac Emergents
+			dataCenter.getPlacementDAO().find(4),
+			
+			// corresponds to LYXOR ETF DJ INDUSTRIAL AVERAGE 
+			dataCenter.getPlacementDAO().find(32),
+			
+			// corresponds to LYXOR INDEX FUND EURO
+			dataCenter.getPlacementDAO().find(27),
+			
+			// corresponds to LYXOR JAPAN TOPIX ETF DLY HDG D 
+			dataCenter.getPlacementDAO().find(33),
+			
+			// corresponds to LYXOR UCITS ETF EUROMTS 3-5Y IG
+			dataCenter.getPlacementDAO().find(37)
+		};
+	// The predefined transaction only involves "AV - Epargnissimo"...
+	private Compte currentCompte = dataCenter.getCompteDAO().find(1);
 	
-	public BoiteDialogueCreationLignes(TableauTransaction tabTrans, HashSet<Integer> predefSet){
+	public BoiteDialogueCreationLignes(TableauTransaction tabTrans){
 		super();
-		this.tabTrans=tabTrans;
-		this.predefSet = predefSet;
+		this.tabTrans = tabTrans;
 		this.setTitle("Données transaction prédéfinie");
 		this.setModal(false);
-		this.setSize(400,250);
+		this.setSize(600,250);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		
-		DataCenter dataCenter = DataCenter.getInstance();
-		Placement place = dataCenter.getPlaceCourant();
 		
 		JPanel panChoix = new JPanel();
 		JPanel panControl = new JPanel();
 		
-		// date :
-		JLabel dateLabel = new JLabel("Date ? (format AAAA-mm-JJ)");
-		JFormattedTextField jtf = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
+		// date panel (default = now)
+		JLabel dateLabel = new JLabel("Date ? (format AAAA-mm-JJ)", SwingConstants.RIGHT);
+		JFormattedTextField jtfDate = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
 		Date now = new Date(System.currentTimeMillis());
-		jtf.setText(now.toString());
+		jtfDate.setText(now.toString());
+		JPanel datePanel = new JPanel();
+		datePanel.setLayout(new GridLayout(1, 2));
+		datePanel.add(dateLabel);
+		datePanel.add(jtfDate);
 		
-		// entrée cours 
-		JLabel coursLabel = new JLabel("Cours :");
-		JFormattedTextField jftfCours = new JFormattedTextField(NumberFormat.getNumberInstance());
+		// === Label panel (has to be compatible with formatting in InputRow)
+		// Placement's name
+		JLabel placementLabel = new JLabel("Placement", SwingConstants.CENTER);
+		
+		// Compte's name
+		JLabel compteLabel = new JLabel("Compte", SwingConstants.CENTER);
 		
 		// entrée nbr UC
 		// + formatage des nombres à 4 décimales...
-		NumberFormat formatter = NumberFormat.getNumberInstance();
-		formatter.setMinimumFractionDigits(4);
-		JLabel totUCLabel = new JLabel("Nbr tot. UC :");
-		JFormattedTextField jftfUC = new JFormattedTextField(formatter);
+		JLabel totUCLabel = new JLabel("Nbr tot. UC", SwingConstants.CENTER);
 		
-		// indiquer repartition entre les deux comptes...
-		float repartition = dataCenter.getRepartition(place);
-    	JLabel repartLabel = new JLabel("Coeff. répart. (compte 1 VS total) ");
-		JFormattedTextField jftfRepart = new JFormattedTextField(formatter);
-		jftfRepart.setValue(repartition);
+		// entrée cours 
+		JLabel coursLabel = new JLabel("Cours", SwingConstants.CENTER);
 		
-		panChoix.setLayout(new GridLayout(4,2));
-		panChoix.add(dateLabel);
-		panChoix.add(jtf);
-		panChoix.add(coursLabel);
-		panChoix.add(jftfCours);
-		panChoix.add(totUCLabel);
-		panChoix.add(jftfUC);
-		panChoix.add(repartLabel);
-		panChoix.add(jftfRepart);
+		// Formatting label Panel
+		JLabel labelPanel = new JLabel();
+		labelPanel.setLayout(new GridLayout(1, 4));
+		labelPanel.add(placementLabel);
+		labelPanel.add(compteLabel);
+		labelPanel.add(totUCLabel);
+		labelPanel.add(coursLabel);
+		
+		// Create list of InputRows:
+		int nbActiveRows = listePlacement.length;
+		InputRow[] activeRows = new InputRow[nbActiveRows];
+		for (int i = 0; i < nbActiveRows ; i++) {
+			Placement place = listePlacement[i];
+			InputRow inputRow = new InputRow(place, currentCompte);
+			activeRows[i] = inputRow;
+		}
+		
+		// Final layout
+		panChoix.setLayout(new GridLayout(nbActiveRows + 2, 1));
+		panChoix.add(datePanel);
+		panChoix.add(labelPanel);
+		for (InputRow inputRow: activeRows) {
+			panChoix.add(inputRow);
+		}
 		
 	    JButton cancelBouton = new JButton("Annuler");
 	    cancelBouton.addActionListener(new ActionListener(){
@@ -97,42 +127,37 @@ public class BoiteDialogueCreationLignes extends JDialog{
 	    JButton okBouton = new JButton("OK");
 	    okBouton.addActionListener(new ActionListener(){
 	      public void actionPerformed(ActionEvent arg0){
-			Compte[] listeCompte = Compte.values();
-	    	JTable tableau = tabTrans.getTableau();
-	    	float nbr = ((Number)jftfUC.getValue()).floatValue();
-	    	float cours = 0f;
-	    	float repartFinale = ((Number)jftfRepart.getValue()).floatValue();
+	    	  // Create suitable transactions and include them in 
+		      // NB: to update the table accordingly, just use method updateTableau.
+	    	  
+	    	  // For each inputRow...
+	    	  for (InputRow inputRow: activeRows) {
+	    		  	// 1 - create a suitable transaction...
+	    		  
+	    		  	Placement place = inputRow.getPlacement();
+	    		  	float cours = inputRow.getCours();
+	    		  	float nbrUC = inputRow.getNbrUC();
 
-	    	cours =((Number)jftfCours.getValue()).floatValue();
-	    	
-	    	// ajoute la première ligne au tableau (attention ! Pas initialisée !)
-	    	Transaction trans0 = new Transaction(
-	    			ZModel.convertStringToDate(jtf.getText()),
-	    			place,
-	    			dataCenter.getCompteDAO().find(1),
-	    			cours,
-	    			nbr*repartFinale, 
-	    			new Float(0), 
-	    			nbr*repartition*cours, 
-	    			new Float(0)
-	    	);
-	    	((ZModel)tableau.getModel()).addRow(trans0);
-
-	    	// ajoute la seconde ligne au tableau
-	    	Transaction trans1 = new Transaction(
-	    			ZModel.convertStringToDate(jtf.getText()),
-	    			place,
-	    			dataCenter.getCompteDAO().find(2),
-	    			cours,
-	    			nbr*(1-repartFinale),
-	    			new Float(0), 
-	    			nbr*(1-repartition)*cours, 
-	    			new Float(0)
-	    	);
-	    	((ZModel)tableau.getModel()).addRow(trans1);
-	    		    	
-	    	// termine le dialogue en rendant la boite invisible
-	        setVisible(false);
+					// ajoute la première ligne au tableau (attention ! Pas initialisée !)
+					Transaction trans = new Transaction(
+							ZModel.convertStringToDate(jtfDate.getText()),
+							place,
+							dataCenter.getCompteDAO().find(1),
+							cours,
+							nbrUC, 
+							new Float(0), 
+							nbrUC*cours,
+							new Float(0)
+					);
+					
+					// 2 - include this transaction in the table
+					dataCenter.getTransacDAO().create(trans);
+	    	 }
+	    	 // after including the new data, update tabTrans     	
+	    	 tabTrans.updateTableau();
+	    	  
+	         // termine le dialogue en rendant la boite invisible
+	    	 setVisible(false);
 	      }
 	    });
 	    
@@ -141,6 +166,7 @@ public class BoiteDialogueCreationLignes extends JDialog{
 	    
 	    this.getContentPane().add(panChoix, BorderLayout.CENTER);
 	    this.getContentPane().add(panControl, BorderLayout.SOUTH);
+	    
 	}
 
 }

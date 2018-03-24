@@ -1,8 +1,6 @@
 package gestion.operation.transaction;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultCellEditor;
@@ -78,6 +76,8 @@ public class TableauTransaction extends TableauCommun<Transaction>{
 	}
 	
 	public void updateTableau(){
+		// Updates the TableauTransaction using fresh data from DataBase.
+		
 		//System.out.println("TableauTransaction.updateTableau() appelé");
 		DataCenter dataCenter = DataCenter.getInstance();
 		

@@ -30,7 +30,6 @@ public class FenetreOperation extends FenetreCommun{
 	protected TableauOrdres tabOrdres = new TableauOrdres();
 	protected TableauCours tabCours = new TableauCours();
 	protected JButton predefBouton;
-	protected HashSet<Integer> predefSet;
 	protected BoutonCompteListener boutonCompteListener = new BoutonCompteListener();
 
 	public BoutonCompteListener getBoutonCompteListener() {
@@ -70,19 +69,11 @@ public class FenetreOperation extends FenetreCommun{
 			}
 		});
 		
-		/*
-		// si le placement est LyxorETFEuro (ind = 3) ou LyxorETFDJ (ind = 6), 
-		// alors on ajoute un bouton avec une opération prédéfinie...
-		*/
-		predefSet = new HashSet<Integer>();
-		predefSet.add(3);
-		predefSet.add(6);
-		
 	    predefBouton = new JButton("Achats prédéf.");
-	    predefBouton.setEnabled(false);
+	    predefBouton.setEnabled(true);
 	    predefBouton.addActionListener(new ActionListener(){
 	      public void actionPerformed(ActionEvent arg0){
-	    	  BoiteDialogueCreationLignes boite = new BoiteDialogueCreationLignes(tabTrans, predefSet);
+	    	  BoiteDialogueCreationLignes boite = new BoiteDialogueCreationLignes(tabTrans);
 	      }
 	    });
 	    
@@ -113,12 +104,6 @@ public class FenetreOperation extends FenetreCommun{
 		
 		// Opération prédéfinie disponible ou non...
 		Placement place = DataCenter.getInstance().getPlaceCourant();
-		try {
-			predefBouton.setEnabled(predefSet.contains(place.getIndex()));
-		} catch (NullPointerException e) {
-			predefBouton.setEnabled(false);
-		}
-		
 		
 		// MàJ des données
 		tabTrans.updateTableau();
