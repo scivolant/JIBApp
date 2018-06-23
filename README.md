@@ -9,7 +9,23 @@ It uses a PostgreSQL database to store data.
 ### Quickstart
 
 * The JIBApp.jar file enables to run the interface.
-* However, to get a fully functional system, you need to create a PostgreSQL database (default name: "jibapp", default user: "postgres"). To get a minimal functioning database, use baseDeDonnees.sql and InitialisationBdD.sql to create and populate the database.
+* However, to get a fully functional system, you need to create a PostgreSQL database (default name: "jibapp", default user: "postgres"). A minimal database is provided by the files baseDeDonnees.sql and InitialisationBdD.sql (which create and populate the database, respectively). Once in PostgreSQL, type:
+```
+create database jibapp;
+\c jibapp
+\i path\to\folder\baseDeDonnees.sql
+\i path\to\folder\InitialisationBdD.sql
+```
+* An overview of basic functions:
+   * When connecting to the database, select "jibapp" and use your chosen username.
+   * You land on the "Accueil" page (homepage). Select the page (and the
+     associated operations) using the combo at the top center of the page.
+   * To add a new operation on a given fund, go to the "Opérations et cours" page.
+     Select the relevant fund with the "Placement sélectionné" combo (right and slightly below the previous combo).
+     You can then create a new transaction with the 'Ajouter une ligne' button
+     (bottom left). To create a new order, use the tab 'Ordres'. With the last tab
+     'Cours', you can update the value of the investment by providing a Date and a quotation.
+   * The "Edition" page enables you to edit the basic properties of objects in the database.
 
 ### About the structure
 

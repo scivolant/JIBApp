@@ -2,13 +2,13 @@
 -- fichier en UTF-8
 --
 -- lire ce fichier dans psql.
--- nom de la base de données : 'gestionsuivi'
+-- nom de la base de données : 'jibapp'
 
-INSERT INTO comptes(name) VALUES('AV Epargn.');
-INSERT INTO comptes(name) VALUES('Retr. Epargn.');
-INSERT INTO comptes(name) VALUES('Oddo');
-INSERT INTO comptes(name) VALUES('Appart. Paturle');
-INSERT INTO comptes(name) VALUES('Cpt Titre BP');
+INSERT INTO comptes(name) VALUES('Assurance-vie');
+INSERT INTO comptes(name) VALUES('Crédit Agricole');
+INSERT INTO comptes(name) VALUES('Société Générale');
+INSERT INTO comptes(name) VALUES('Un appart...');
+INSERT INTO comptes(name) VALUES('Cpt Titre');
 
 INSERT INTO types(name) VALUES('ETF');
 INSERT INTO types(name) VALUES('OPCVM');
