@@ -38,5 +38,6 @@ Packages:
 * "observer" for an observer pattern
 * "operation" - operation panel, where buying and selling investments are recorded
 * "util" - classes used in several different panels.
+* "sqliteImport" - provides functions for an import function from an Sqlite database.
 
 The git repository contains only the source codes, so the best option to edit it in Eclipse is to clone the repository in .../JIBapp/src/gestion (to avoid any problem with packages...).
