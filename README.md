@@ -2,9 +2,16 @@
 
 ### A program to follow and manage investments using a SQL database.
 
-Main class: GestionSuivi.java, the program then runs in a window (not output, just modification of the database).
+Main class: GestionSuivi.java, the program then runs in a window (no output, just modification of the database).
 
-It uses a PostgreSQL database to store data (use baseDeDonnees.sql and InitialisationBdD.sql to create the database).
+It uses a PostgreSQL database to store data.
+
+### Quickstart
+
+* The JIBApp.jar file enables to run the interface.
+* However, to get a fully functional system, you need to create a PostgreSQL database (default name: "jibapp", default user: "postgres"). To get a minimal functioning database, use baseDeDonnees.sql and InitialisationBdD.sql to create and populate the database.
+
+### About the structure
 
 Packages:
 * "accueil" - default/initial panel

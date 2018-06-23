@@ -3,7 +3,7 @@
 --
 -- Pour créer la base de donnée elle-même,
 -- lire ce fichier dans psql.
--- nom de la base de données : "gestionsuivi"
+-- nom de la base de données : "jibapp"
 
 create table comptes(
 	id_compte serial primary key

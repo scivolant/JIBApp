@@ -2,7 +2,7 @@
 -- fichier en UTF-8
 --
 -- lire ce fichier dans psql.
--- nom de la base de données : 'gestionsuivi'
+-- nom de la base de données : 'jibapp'
 
 INSERT INTO types(name) VALUES('ETF');
 INSERT INTO types(name) VALUES('OPCVM');
