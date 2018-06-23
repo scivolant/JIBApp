@@ -1,8 +1,8 @@
-## GestionSuivi
+## JIBApp
 
 ### A program to follow and manage investments using a SQL database.
 
-Main class: GestionSuivi.java, the program then runs in a window (no output, just modification of the database).
+Main class: JIBApp.java, the program then runs in a window (no output, just modification of the database).
 
 It uses a PostgreSQL database to store data.
 
