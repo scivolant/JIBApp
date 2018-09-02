@@ -27,6 +27,18 @@ public class CoursModel extends ZModel<Cours> {
 		  }
 	  }
 	  
+	  /**
+	   * Set different values for the 'Cours' object.
+	   * 
+	   * <p>This method includes converters, namely:
+	   * <ul>
+	   * <li> from String to Float,</li>
+	   * <li> from String to Date.</li>
+	   * </ul>
+	   * The converters themselves can be found in 'ZModel'.</p>
+	   * 
+	   * @see gestion.util.ZModel
+	   */
 	  public void setValueAt(Object value, int row, int col){
 		  // la sortie de FloatEditor est un String, 
 		  // que l'on convertit avec convertStringToFloat (dans ZModel)

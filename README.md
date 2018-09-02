@@ -41,3 +41,7 @@ Packages:
 * "sqliteImport" - provides functions for an import function from an Sqlite database.
 
 The git repository contains only the source codes, so the best option to edit it in Eclipse is to clone the repository in .../JIBapp/src/gestion (to avoid any problem with packages...).
+
+## Licence
+
+All rights reserved Olivier GABRIEL and SoGaR 2018.

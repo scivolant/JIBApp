@@ -96,12 +96,13 @@ public class FenetreOperation extends FenetreCommun{
 		this.add(tabbedPane, BorderLayout.CENTER);
 	}
 	
+	/**
+	 * Redéfini la méthode updateFenetre de FenetreCommun.
+	 * 
+	 * @see gestion.util.FenetreCommun
+	 */
 	@Override
 	public void updateFenetre(){
-		/*
-		 * Redéfini la méthode updateFenetre de FenetreCommun.
-		 */
-		
 		// Opération prédéfinie disponible ou non...
 		Placement place = DataCenter.getInstance().getPlaceCourant();
 		
