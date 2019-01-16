@@ -5,16 +5,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
 import gestion.compta.Compte;
@@ -56,9 +53,13 @@ public class BoiteDialogueCreationLignes extends JDialog{
 	// The predefined transaction only involves "AV - Epargnissimo"...
 	private Compte currentCompte = dataCenter.getCompteDAO().find(1);
 	
-	public BoiteDialogueCreationLignes(TableauTransaction tabTrans){
+	private InputRow[] activeRows;
+	
+	private JFormattedTextField jtfDate;
+	
+	public BoiteDialogueCreationLignes(TableauTransaction tabTransIni){
 		super();
-		this.tabTrans = tabTrans;
+		this.tabTrans = tabTransIni;
 		this.setTitle("Données transaction prédéfinie");
 		this.setModal(false);
 		this.setSize(600,250);
@@ -70,7 +71,7 @@ public class BoiteDialogueCreationLignes extends JDialog{
 		
 		// date panel (default = now)
 		JLabel dateLabel = new JLabel("Date ? (format AAAA-mm-JJ)", SwingConstants.RIGHT);
-		JFormattedTextField jtfDate = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
+		jtfDate = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
 		Date now = new Date(System.currentTimeMillis());
 		jtfDate.setText(now.toString());
 		JPanel datePanel = new JPanel();
@@ -102,7 +103,7 @@ public class BoiteDialogueCreationLignes extends JDialog{
 		
 		// Create list of InputRows:
 		int nbActiveRows = listePlacement.length;
-		InputRow[] activeRows = new InputRow[nbActiveRows];
+		activeRows = new InputRow[nbActiveRows];
 		for (int i = 0; i < nbActiveRows ; i++) {
 			Placement place = listePlacement[i];
 			InputRow inputRow = new InputRow(place, currentCompte);

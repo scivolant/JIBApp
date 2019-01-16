@@ -37,6 +37,8 @@ public class GestionSuivi {
 	private JPanel content;
 	private FenetreCommun[] listFenetre;
 	private JPanel panCompte;
+	private JComboBox<String> comboG;
+	private CardLayout cl;
 	
 	private String[] listContent;
 	
@@ -50,7 +52,7 @@ public class GestionSuivi {
 		fg.setLocationRelativeTo(null);
 		fg.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		CardLayout cl = new CardLayout();
+		cl = new CardLayout();
 		content.setLayout(cl);
 		
 		DataCenter dataCenter = DataCenter.getInstance();
@@ -96,7 +98,7 @@ public class GestionSuivi {
 		// Choix de la page à afficher (haut de la fenêtre)
 		// ===============================
 		JLabel label = new JLabel("Sélection de la page : ");
-		JComboBox<String> comboG = new JComboBox<String>(listContent);
+		comboG = new JComboBox<String>(listContent);
 		comboG.setPreferredSize(new Dimension(200,20));
 		// Gestion de la sélection de la page
 		// Page sélectionnée => MàJ et affichage.
@@ -138,7 +140,7 @@ public class GestionSuivi {
 				// Update panCompte
 				updatePanCompte();
 				// Update FenetreOperation
-				fenetreOperation.updateFenetre();	
+				listFenetre[1].updateFenetre();	
 			}
 		}
 		

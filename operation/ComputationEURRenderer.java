@@ -17,7 +17,7 @@ public class ComputationEURRenderer extends JLabel implements TableCellRenderer 
 			int column) {
 		try {
 			// Attention ! la colonne "Cours cible" est notée en dur...
-			float updatedVal= ((float)table.getModel().getValueAt(row, (column-2)))*((float)table.getModel().getValueAt(row, 1));
+			float updatedVal= ((Float)table.getModel().getValueAt(row, (column-2)))*((Float)table.getModel().getValueAt(row, 1));
 			table.setValueAt(updatedVal, row, column);
 			this.setText(String.format("%.2f",updatedVal));
 		} catch (ArithmeticException e){

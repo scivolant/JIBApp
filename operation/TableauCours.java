@@ -26,11 +26,12 @@ import gestion.util.TableauCommun;
 
 public class TableauCours extends TableauCommun<Cours>{
 	private JPanel panCours;
+	private DataCenter dataSql;
 	
 	public TableauCours(){
 		super(new CoursModel());
 		
-		DataCenter dataSql = DataCenter.getInstance();
+		dataSql = DataCenter.getInstance();
 		
 	    //Pour mémoire, les titres des colonnes (vrai title dans "CoursModel")
 	    //String  title[] = {"Date", "Cours", "Suppr."};

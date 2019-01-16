@@ -52,7 +52,7 @@ public class TransModel extends ZModel<Transaction> {
 			  		data.get(row).setCompte((Compte)value);
 			  		break;
 			  	case 2:
-			  		data.get(row).setCoursUnit((float)value);
+			  		data.get(row).setCoursUnit((Float)value);
 			  		break;
 			  	case 3:
 			  		data.get(row).setAddUC(this.convertStringToFloat(value));

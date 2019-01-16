@@ -1,5 +1,8 @@
 package gestion.compta;
 
+import javax.persistence.Entity;
+
+@Entity(name="comptes")
 public class Compte {
 	private String name;
 	private int id_compte;

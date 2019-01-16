@@ -29,6 +29,10 @@ import javax.swing.JTextField;
 public class DialogueConnection extends JDialog{
 	private String user, passwd, host, dataBase;
 	private Boolean sendData;
+	private JTextField userJtf;
+	private JPasswordField passwdJtf;
+	private JComboBox<String> hostCombo;
+	private JComboBox<String> dbCombo;
 	
 	public DialogueConnection(){
 		super();
@@ -42,19 +46,19 @@ public class DialogueConnection extends JDialog{
 		
 		// Choix de l'hôte :
 		JLabel hostLabel = new JLabel("Choix de l'hôte :");
-		JComboBox<String> hostCombo = new JComboBox<String>(new String[]{"localhost:5432"});
+		hostCombo = new JComboBox<String>(new String[]{"localhost:5432"});
 		
 		// Choix de la base de données :
 		JLabel dbLabel = new JLabel("Choix de la base :");
-		JComboBox<String> dbCombo = new JComboBox<String>(new String[]{"postgres", "jibapp"});
+		dbCombo = new JComboBox<String>(new String[]{"postgres", "jibapp"});
 		
 		// user :
 		JLabel userLabel = new JLabel("Utilisateur :");
-		JTextField userJtf = new JTextField("postgres");
+		userJtf = new JTextField("postgres");
 		
 		// entrée mot de passe 
 		JLabel passwdLabel = new JLabel("Mot de passe :");
-		JPasswordField passwdJtf = new JPasswordField();
+		passwdJtf = new JPasswordField();
 		
 		panChoix.setLayout(new GridLayout(4,2));
 		panChoix.add(hostLabel);
