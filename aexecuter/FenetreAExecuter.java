@@ -15,6 +15,8 @@ import gestion.data.DataCenter;
 import gestion.util.FenetreCommun;
 
 public class FenetreAExecuter extends FenetreCommun {
+	AExecuterModel dModelA;
+	AExecuterModel dModelV;
 
 	public FenetreAExecuter() {
 		super();
@@ -27,7 +29,7 @@ public class FenetreAExecuter extends FenetreCommun {
 		// Initialiser le modèle
 		Object[][] dataAchats = DataCenter.getInstance().achatsAExecuter();
 		String[] titleAchats = {"Placement", "Volume (UC)", "Cours ordre", "Dernier cours", "Date cours"};
-		AExecuterModel dModelA = new AExecuterModel(dataAchats,titleAchats);
+		dModelA = new AExecuterModel(dataAchats,titleAchats);
 
 		JTable tabAchats = new TableauAExecuter(dModelA);
 
@@ -42,7 +44,7 @@ public class FenetreAExecuter extends FenetreCommun {
 		JLabel ventes = new JLabel("Ventes");
 		Object[][] dataVentes = DataCenter.getInstance().ventesAExecuter();
 		String[] titleVentes = {"Placement", "Volume (UC)", "Cours ordre", "Dernier cours", "Date cours"};
-		AExecuterModel dModelV = new AExecuterModel(dataVentes,titleVentes);
+		dModelV = new AExecuterModel(dataVentes,titleVentes);
 		
 		JTable tabVentes = new TableauAExecuter(dModelV);
 		

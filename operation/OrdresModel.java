@@ -62,10 +62,10 @@ public class OrdresModel extends ZModel<Ordre> {
 			  		data.get(row).setDimUC(this.convertStringToFloat(value));
 			  		break;
 			  	case 4:
-			  		data.get(row).setAddEUR((float)value);
+			  		data.get(row).setAddEUR((Float)value);
 			  		break;
 			  	case 5:
-			  		data.get(row).setDimEUR((float)value);
+			  		data.get(row).setDimEUR((Float)value);
 			  		break;
 			  	case 6:
 			  		data.get(row).setNote((String)value);

@@ -56,7 +56,10 @@ public class BoiteDialogueCreationLignes extends JDialog{
 	// The predefined transaction only involves "AV - Epargnissimo"...
 	private Compte currentCompte = dataCenter.getCompteDAO().find(1);
 	
-	public BoiteDialogueCreationLignes(TableauTransaction tabTrans){
+	InputRow[] activeRows;
+	JFormattedTextField jtfDate;
+	
+	public BoiteDialogueCreationLignes(final TableauTransaction tabTrans){
 		super();
 		this.tabTrans = tabTrans;
 		this.setTitle("Données transaction prédéfinie");
@@ -70,7 +73,7 @@ public class BoiteDialogueCreationLignes extends JDialog{
 		
 		// date panel (default = now)
 		JLabel dateLabel = new JLabel("Date ? (format AAAA-mm-JJ)", SwingConstants.RIGHT);
-		JFormattedTextField jtfDate = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
+		jtfDate = new JFormattedTextField(new SimpleDateFormat("yyyy-MM-dd"));
 		Date now = new Date(System.currentTimeMillis());
 		jtfDate.setText(now.toString());
 		JPanel datePanel = new JPanel();
@@ -102,7 +105,7 @@ public class BoiteDialogueCreationLignes extends JDialog{
 		
 		// Create list of InputRows:
 		int nbActiveRows = listePlacement.length;
-		InputRow[] activeRows = new InputRow[nbActiveRows];
+		activeRows = new InputRow[nbActiveRows];
 		for (int i = 0; i < nbActiveRows ; i++) {
 			Placement place = listePlacement[i];
 			InputRow inputRow = new InputRow(place, currentCompte);
