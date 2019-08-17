@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -26,11 +25,10 @@ import gestion.util.TableauCommun;
 
 public class TableauCours extends TableauCommun<Cours>{
 	private JPanel panCours;
+	DataCenter dataSql  = DataCenter.getInstance();
 	
 	public TableauCours(){
 		super(new CoursModel());
-		
-		DataCenter dataSql = DataCenter.getInstance();
 		
 	    //Pour mémoire, les titres des colonnes (vrai title dans "CoursModel")
 	    //String  title[] = {"Date", "Cours", "Suppr."};

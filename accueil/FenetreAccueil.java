@@ -21,17 +21,16 @@ public class FenetreAccueil extends FenetreCommun {
 	protected JTable tableauRepartition;
 	protected JLabel achats;
 	protected JLabel ventes;
+	DataCenter dataSql = DataCenter.getInstance();
 	
 	public FenetreAccueil(){
 		super();
 
-		DataCenter dataSql = DataCenter.getInstance();
-		
 		// Chercher les données pour l'accueil :
 		Object[][] data = dataSql.accueilData();
 		
 	    //Les titres des colonnes
-	    String  title[] = {"Type", "Euros", "%"};
+	    final String  title[] = {"Type", "Euros", "%"};
 	    
 	    ZModel2 model = new ZModel2(data, title);
 	    this.tableauRepartition = new JTable(model);
