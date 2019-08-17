@@ -20,7 +20,7 @@ public class NormUCRenderer extends JLabel implements TableCellRenderer {
 			int column) {
 		String text;
 		try{
-			float updatedVal=(float)table.getModel().getValueAt(row, column);
+			float updatedVal=(Float)table.getModel().getValueAt(row, column);
 			text = String.format("%.4f",updatedVal);
 		} catch (Exception e){
 			text = "-";

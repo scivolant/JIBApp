@@ -42,6 +42,11 @@ public class GestionSuivi {
 	
 	private Color secondColor = Color.lightGray;
 	
+	JComboBox<String> comboG;
+	CardLayout cl;
+	FenetreOperation fenetreOperation;
+	
+	
 	public GestionSuivi(){
 		JFrame fg = new JFrame();
 		content = new JPanel();
@@ -50,7 +55,7 @@ public class GestionSuivi {
 		fg.setLocationRelativeTo(null);
 		fg.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		CardLayout cl = new CardLayout();
+		cl = new CardLayout();
 		content.setLayout(cl);
 		
 		DataCenter dataCenter = DataCenter.getInstance();
@@ -75,7 +80,7 @@ public class GestionSuivi {
 		});
 		
 		// Initialisation de fenetreOperation
-		FenetreOperation fenetreOperation = new FenetreOperation();
+		fenetreOperation = new FenetreOperation();
 		
 		// Création des différentes fenêtres et ajout dans "listFenetre" et "content"
 		listFenetre = new FenetreCommun[4];
@@ -96,7 +101,7 @@ public class GestionSuivi {
 		// Choix de la page à afficher (haut de la fenêtre)
 		// ===============================
 		JLabel label = new JLabel("Sélection de la page : ");
-		JComboBox<String> comboG = new JComboBox<String>(listContent);
+		comboG = new JComboBox<String>(listContent);
 		comboG.setPreferredSize(new Dimension(200,20));
 		// Gestion de la sélection de la page
 		// Page sélectionnée => MàJ et affichage.

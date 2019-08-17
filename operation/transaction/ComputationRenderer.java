@@ -17,7 +17,7 @@ public class ComputationRenderer extends JLabel implements TableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean isFocus, int row,
 			int column) {
 		try {
-			float updatedVal= (((float)table.getModel().getValueAt(row, (column+3))-(float)table.getModel().getValueAt(row, (column+4))))/((float)table.getModel().getValueAt(row, (column+1))-(float)table.getModel().getValueAt(row, (column+2)));
+			float updatedVal= (((Float)table.getModel().getValueAt(row, (column+3))-(Float)table.getModel().getValueAt(row, (column+4))))/((Float)table.getModel().getValueAt(row, (column+1))-(Float)table.getModel().getValueAt(row, (column+2)));
 			table.setValueAt(updatedVal, row, column);
 			this.setText(String.format("%.2f",updatedVal));
 		} catch (ArithmeticException e){
